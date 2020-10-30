@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="vector" version="1.1" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+ <path id="path" d="m128 64c0 35.35-28.65 64-64 64s-64-28.65-64-64 28.65-64 64-64 64 28.65 64 64" fill="#9bbe55"/>
+ <path d="m48 88 4-68 12-12 12 12 4 68z" fill="#d9d9d9" stroke="#aeaeae" stroke-width="4"/>
+ <rect x="36" y="84" width="56" height="12" fill="#b9b9b9" style="paint-order:stroke markers fill"/>
+ <path d="m28 100h72l4 8h-80z" fill-opacity=".2" style="paint-order:stroke markers fill"/>
+ <path d="m28 96h72l4 8h-80z" fill="#aaa" style="paint-order:stroke markers fill"/>
+ <rect x="56" y="64" width="16" height="12" fill="#b9b9b9"/>
+</svg>

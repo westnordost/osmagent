@@ -203,6 +203,7 @@ quest icons/
     max_height.svg
     max_speed.svg
     max_weight.svg
+    memorial.svg
     money.svg                        modified from EmojiOne 2: U+1F4B8
     motorcycle.svg
     motorcycle_parking.svg

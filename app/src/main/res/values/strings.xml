@@ -923,6 +923,13 @@ Otherwise, you can download another keyboard in the app store. Popular keyboards
     <string name="at_housenumber">house number %s:</string>
     <string name="quest_summit_register_title">Is there a summit register at %s?</string>
     <string name="quest_is_defibrillator_inside_title">Is this defibrillator (AED) inside a building?</string>
+    <string name="quest_memorialType_title">What kind of memorial is this?</string>
+    <string name="quest_memorialType_statue">Statue</string>
+    <string name="quest_memorialType_bust">Bust</string>
+    <string name="quest_memorialType_plaque">Plaque</string>
+    <string name="quest_memorialType_war_memorial">War memorial</string>
+    <string name="quest_memorialType_stolperstein">Stolperstein</string>
+    <string name="quest_memorialType_stone">Stone</string>
 
     <string name="quest_pedestrian_crossing_island">"Does this pedestrian crossing have an island?"</string>
     <string name="quest_surface_detailed_answer_impossible_title">Describe surface</string>

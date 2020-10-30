@@ -45,6 +45,7 @@ import de.westnordost.streetcomplete.quests.road_name.data.RoadNameSuggestionsDa
 import de.westnordost.streetcomplete.quests.max_height.AddMaxHeight
 import de.westnordost.streetcomplete.quests.max_speed.AddMaxSpeed
 import de.westnordost.streetcomplete.quests.max_weight.AddMaxWeight
+import de.westnordost.streetcomplete.quests.memorial_type.AddMemorialType
 import de.westnordost.streetcomplete.quests.motorcycle_parking_capacity.AddMotorcycleParkingCapacity
 import de.westnordost.streetcomplete.quests.motorcycle_parking_cover.AddMotorcycleParkingCover
 import de.westnordost.streetcomplete.quests.oneway.AddOneway
@@ -208,7 +209,8 @@ import javax.inject.Singleton
         AddCarWashType(),
         AddBenchStatusOnBusStop(),
         AddBenchBackrest(),
-        AddTrafficSignalsButton()
+        AddTrafficSignalsButton(),
+        AddMemorialType()
     ))
 
     @Provides @Singleton fun osmNoteQuestType(): OsmNoteQuestType = OsmNoteQuestType()

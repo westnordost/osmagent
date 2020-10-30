@@ -899,6 +899,13 @@ Erfolge"</string>
     <string name="quest_busStopBench_name_title">"Hat die Haltestelle %s eine Bank?"</string>
     <string name="quest_summit_register_title">"Gibt es bei %s ein Gipfelbuch?"</string>
     <string name="quest_is_defibrillator_inside_title">"Befindet sich dieser Defibrillator innerhalb eines Gebäudes?"</string>
+    <string name="quest_memorialType_title">"Welche Art Denkmal ist dies?"</string>
+    <string name="quest_memorialType_statue">"Statue"</string>
+    <string name="quest_memorialType_bust">"Büste"</string>
+    <string name="quest_memorialType_plaque">"Gedenktafel"</string>
+    <string name="quest_memorialType_war_memorial">"Kriegsdenkmal"</string>
+    <string name="quest_memorialType_stolperstein">"Stolperstein"</string>
+    <string name="quest_memorialType_stone">"Gedenkstein"</string>
     <string name="dialog_tutorial_download">"Wenn Auto-Sync aus ist, werden Aufgaben nicht automatisch heruntergeladen. Um dies manuell zu tun, benutze den „%s“-Knopf im Menü an der Stelle, an der du sie herunterladen möchtest."</string>
     <string name="about_title_translate">"App übersetzen"</string>
 
