@@ -105,7 +105,7 @@ class AchievementsFragment : Fragment(R.layout.fragment_achievements),
             override fun onBind(with: Pair<Achievement, Int>) {
                 val achievement = with.first
                 val level = with.second
-                itemView.achievementIconView.icon = resources.getDrawable(achievement.icon)
+                itemView.achievementIconView.icon = requireContext().getDrawable(achievement.icon)
                 itemView.achievementIconView.level = level
                 itemView.achievementIconView.setOnClickListener {
                     listener?.onClickedAchievement(achievement, level, itemView.achievementIconView)

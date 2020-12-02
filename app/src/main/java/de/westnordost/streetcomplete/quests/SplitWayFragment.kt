@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.PointF
 import android.graphics.drawable.Animatable
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -22,13 +21,12 @@ import de.westnordost.osmapi.map.data.LatLon
 import de.westnordost.osmapi.map.data.OsmLatLon
 import de.westnordost.osmapi.map.data.Way
 import de.westnordost.streetcomplete.Injector
-
 import de.westnordost.streetcomplete.R
-import de.westnordost.streetcomplete.data.quest.QuestGroup
 import de.westnordost.streetcomplete.data.osm.elementgeometry.ElementPolylinesGeometry
 import de.westnordost.streetcomplete.data.osm.splitway.SplitAtLinePosition
 import de.westnordost.streetcomplete.data.osm.splitway.SplitAtPoint
 import de.westnordost.streetcomplete.data.osm.splitway.SplitPolylineAtPosition
+import de.westnordost.streetcomplete.data.quest.QuestGroup
 import de.westnordost.streetcomplete.ktx.*
 import de.westnordost.streetcomplete.util.SoundFx
 import de.westnordost.streetcomplete.util.alongTrackDistanceTo
@@ -101,13 +99,11 @@ class SplitWayFragment : Fragment(R.layout.fragment_split_way),
         undoButton.isInvisible = !hasChanges
         okButton.isInvisible = !isFormComplete
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val cornerRadius = resources.getDimension(R.dimen.speech_bubble_rounded_corner_radius)
-            val margin = resources.getDimensionPixelSize(R.dimen.horizontal_speech_bubble_margin)
-            speechbubbleContentContainer.outlineProvider = RoundRectOutlineProvider(
-                cornerRadius, margin, margin, margin, margin
-            )
-        }
+        val cornerRadius = resources.getDimension(R.dimen.speech_bubble_rounded_corner_radius)
+        val margin = resources.getDimensionPixelSize(R.dimen.horizontal_speech_bubble_margin)
+        speechbubbleContentContainer.outlineProvider = RoundRectOutlineProvider(
+            cornerRadius, margin, margin, margin, margin
+        )
 
         if (savedInstanceState == null) {
             view.findViewById<View>(R.id.speechbubbleContentContainer).startAnimation(
@@ -117,20 +113,17 @@ class SplitWayFragment : Fragment(R.layout.fragment_split_way),
     }
 
     private fun setupFittingToSystemWindowInsets() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            view?.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
-
-                bottomSheetContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    setMargins(
-                        insets.systemWindowInsetLeft,
-                        insets.systemWindowInsetTop,
-                        insets.systemWindowInsetRight,
-                        insets.systemWindowInsetBottom
-                    )
-                }
-
-                insets
+        view?.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
+            bottomSheetContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                setMargins(
+                    insets.systemWindowInsetLeft,
+                    insets.systemWindowInsetTop,
+                    insets.systemWindowInsetRight,
+                    insets.systemWindowInsetBottom
+                )
             }
+
+            insets
         }
     }
 

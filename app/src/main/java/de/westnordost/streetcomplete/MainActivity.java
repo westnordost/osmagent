@@ -1,26 +1,16 @@
 package de.westnordost.streetcomplete;
 
-import android.content.res.Configuration;
-import android.graphics.Point;
-import androidx.annotation.NonNull;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.AnyThread;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.KeyEvent;
@@ -28,6 +18,16 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.preference.PreferenceManager;
 
 import javax.inject.Inject;
 
@@ -39,13 +39,13 @@ import de.westnordost.osmapi.map.data.LatLon;
 import de.westnordost.osmapi.map.data.OsmLatLon;
 import de.westnordost.streetcomplete.controls.NotificationButtonFragment;
 import de.westnordost.streetcomplete.data.download.DownloadItem;
+import de.westnordost.streetcomplete.data.download.DownloadProgressListener;
+import de.westnordost.streetcomplete.data.download.QuestDownloadController;
 import de.westnordost.streetcomplete.data.notifications.Notification;
 import de.westnordost.streetcomplete.data.notifications.NotificationsSource;
 import de.westnordost.streetcomplete.data.quest.Quest;
 import de.westnordost.streetcomplete.data.quest.QuestAutoSyncer;
 import de.westnordost.streetcomplete.data.quest.QuestController;
-import de.westnordost.streetcomplete.data.download.DownloadProgressListener;
-import de.westnordost.streetcomplete.data.download.QuestDownloadController;
 import de.westnordost.streetcomplete.data.quest.UnsyncedChangesCountSource;
 import de.westnordost.streetcomplete.data.upload.UploadController;
 import de.westnordost.streetcomplete.data.upload.UploadProgressListener;
@@ -55,10 +55,10 @@ import de.westnordost.streetcomplete.location.LocationRequestFragment;
 import de.westnordost.streetcomplete.location.LocationState;
 import de.westnordost.streetcomplete.location.LocationUtil;
 import de.westnordost.streetcomplete.map.MainFragment;
-import de.westnordost.streetcomplete.notifications.NotificationsContainerFragment;
 import de.westnordost.streetcomplete.map.tangram.CameraPosition;
-import de.westnordost.streetcomplete.util.CrashReportExceptionHandler;
+import de.westnordost.streetcomplete.notifications.NotificationsContainerFragment;
 import de.westnordost.streetcomplete.tutorial.TutorialFragment;
+import de.westnordost.streetcomplete.util.CrashReportExceptionHandler;
 import de.westnordost.streetcomplete.util.GeoLocation;
 import de.westnordost.streetcomplete.util.GeoUriKt;
 import de.westnordost.streetcomplete.view.dialogs.RequestLoginDialog;
@@ -118,11 +118,8 @@ public class MainActivity extends AppCompatActivity implements
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-		{
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-		}
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
 		if(prefs.getBoolean(Prefs.KEEP_SCREEN_ON, false))
 		{

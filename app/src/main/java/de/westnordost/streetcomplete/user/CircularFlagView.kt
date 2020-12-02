@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
@@ -31,11 +30,9 @@ class CircularFlagView @JvmOverloads constructor(
     }
 
     init {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            outlineProvider = object : ViewOutlineProvider() {
-                override fun getOutline(view: View, outline: Outline) {
-                    outline.setOval(0,0,view.width,view.height)
-                }
+        outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setOval(0, 0, view.width, view.height)
             }
         }
     }
@@ -87,7 +84,7 @@ class CircularFlagView @JvmOverloads constructor(
             if (resId == 0) {
                 drawable = null
             } else {
-                val d = resources.getDrawable(resId)
+                val d = context.getDrawable(resId)!!
                 val alignment = get(resources, countryCode)
                 boundsOffset = if (alignment != null) {
                     getBoundsOffset(d, alignment)

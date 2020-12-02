@@ -2,7 +2,6 @@ package de.westnordost.streetcomplete.quests.note_discussion
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
@@ -64,7 +63,7 @@ class NoteDiscussionForm : AbstractQuestAnswerFragment<NoteAnswer>() {
 
         updateDoneButtonEnablement()
 
-        anonAvatar = resources.getDrawable(R.drawable.ic_osm_anon_avatar).createBitmap()
+        anonAvatar = requireContext().getDrawable(R.drawable.ic_osm_anon_avatar)!!.createBitmap()
 
         inflateNoteDiscussion(osmNoteQuestController.get(questId)!!.note.comments)
 
@@ -120,21 +119,18 @@ class NoteDiscussionForm : AbstractQuestAnswerFragment<NoteAnswer>() {
         ListAdapter.ViewHolder<NoteComment>(itemView) {
 
         init {
+            val cornerRadius = resources.getDimension(R.dimen.speech_bubble_rounded_corner_radius)
+            val margin = resources.getDimensionPixelSize(R.dimen.horizontal_speech_bubble_margin)
+            val marginStart = -resources.getDimensionPixelSize(R.dimen.quest_form_speech_bubble_top_margin)
+            itemView.commentStatusText.outlineProvider = RoundRectOutlineProvider(cornerRadius)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val cornerRadius = resources.getDimension(R.dimen.speech_bubble_rounded_corner_radius)
-                val margin = resources.getDimensionPixelSize(R.dimen.horizontal_speech_bubble_margin)
-                val marginStart = -resources.getDimensionPixelSize(R.dimen.quest_form_speech_bubble_top_margin)
-                itemView.commentStatusText.outlineProvider = RoundRectOutlineProvider(cornerRadius)
-
-                val isRTL = itemView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-                val marginLeft = if (isRTL) 0 else marginStart
-                val marginRight = if (isRTL) marginStart else 0
-                itemView.commentBubble.outlineProvider = RoundRectOutlineProvider(
-                    cornerRadius, marginLeft, margin, marginRight, margin
-                )
-                itemView.commentAvatarImageContainer.outlineProvider = CircularOutlineProvider
-            }
+            val isRTL = itemView.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+            val marginLeft = if (isRTL) 0 else marginStart
+            val marginRight = if (isRTL) marginStart else 0
+            itemView.commentBubble.outlineProvider = RoundRectOutlineProvider(
+                cornerRadius, marginLeft, margin, marginRight, margin
+            )
+            itemView.commentAvatarImageContainer.outlineProvider = CircularOutlineProvider
         }
 
         override fun onBind(comment: NoteComment) {

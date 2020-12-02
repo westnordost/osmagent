@@ -1,7 +1,6 @@
 package de.westnordost.streetcomplete.map
 
 import android.content.res.Resources
-import android.os.Build
 import androidx.collection.LongSparseArray
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -12,8 +11,10 @@ import de.westnordost.streetcomplete.data.quest.*
 import de.westnordost.streetcomplete.data.visiblequests.OrderedVisibleQuestTypesProvider
 import de.westnordost.streetcomplete.ktx.values
 import de.westnordost.streetcomplete.map.tangram.toLngLat
-import de.westnordost.streetcomplete.quests.bikeway.AddCycleway
-import de.westnordost.streetcomplete.util.*
+import de.westnordost.streetcomplete.util.Tile
+import de.westnordost.streetcomplete.util.TilesRect
+import de.westnordost.streetcomplete.util.enclosingTilesRect
+import de.westnordost.streetcomplete.util.minTileRect
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -118,10 +119,6 @@ class QuestPinLayerManager @Inject constructor(
     }
 
     private fun add(quest: Quest, group: QuestGroup) {
-        // hack away cycleway quests for old Android SDK versions (#713)
-        if (quest.type is AddCycleway && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return
-        }
         val questIconName = resources.getResourceEntryName(quest.type.icon)
         val positions = quest.markerLocations
         val points = positions.map { position ->

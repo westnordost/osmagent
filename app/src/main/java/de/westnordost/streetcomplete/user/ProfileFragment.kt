@@ -59,7 +59,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        anonAvatar = resources.getDrawable(R.drawable.ic_osm_anon_avatar).createBitmap()
+        anonAvatar = context.getDrawable(R.drawable.ic_osm_anon_avatar)!!.createBitmap()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

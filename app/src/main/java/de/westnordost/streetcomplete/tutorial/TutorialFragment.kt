@@ -3,7 +3,6 @@ package de.westnordost.streetcomplete.tutorial
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.AnimatedVectorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -68,16 +67,14 @@ class TutorialFragment : Fragment(R.layout.fragment_tutorial) {
     }
 
     private fun setupFittingToSystemWindowInsets() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            view?.setOnApplyWindowInsetsListener { v: View?, insets: WindowInsets ->
-                view?.setPadding(
-                    insets.systemWindowInsetLeft,
-                    insets.systemWindowInsetTop,
-                    insets.systemWindowInsetRight,
-                    insets.systemWindowInsetBottom
-                )
-                insets
-            }
+        view?.setOnApplyWindowInsetsListener { v: View?, insets: WindowInsets ->
+            view?.setPadding(
+                insets.systemWindowInsetLeft,
+                insets.systemWindowInsetTop,
+                insets.systemWindowInsetRight,
+                insets.systemWindowInsetBottom
+            )
+            insets
         }
     }
 
@@ -205,9 +202,7 @@ class TutorialFragment : Fragment(R.layout.fragment_tutorial) {
                 .alpha(1f)
                 .start()
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                (checkmarkView.drawable as? AnimatedVectorDrawable)?.start()
-            }
+            (checkmarkView.drawable as? AnimatedVectorDrawable)?.start()
         }, 1400L)
     }
 

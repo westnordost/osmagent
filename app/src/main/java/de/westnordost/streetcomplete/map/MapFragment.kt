@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PointF
 import android.graphics.RectF
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -125,18 +124,16 @@ open class MapFragment : Fragment(),
     }
 
     private fun setupFittingToSystemWindowInsets() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            view?.setOnApplyWindowInsetsListener { _, insets ->
-                attributionContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    setMargins(
-                        insets.systemWindowInsetLeft,
-                        insets.systemWindowInsetTop,
-                        insets.systemWindowInsetRight,
-                        insets.systemWindowInsetBottom
-                    )
-                }
-                insets
+        view?.setOnApplyWindowInsetsListener { _, insets ->
+            attributionContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                setMargins(
+                    insets.systemWindowInsetLeft,
+                    insets.systemWindowInsetTop,
+                    insets.systemWindowInsetRight,
+                    insets.systemWindowInsetBottom
+                )
             }
+            insets
         }
     }
 
@@ -232,9 +229,7 @@ open class MapFragment : Fragment(),
             SceneUpdate("global.text_size_scaling", "${resources.configuration.fontScale}"),
             SceneUpdate("global.api_key", vectorTileProvider.apiKey)
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            updates.add(SceneUpdate("global.language_script", Locale.getDefault().script))
-        }
+        updates.add(SceneUpdate("global.language_script", Locale.getDefault().script))
         return updates
     }
 

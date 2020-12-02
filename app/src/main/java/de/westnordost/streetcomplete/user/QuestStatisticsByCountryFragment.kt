@@ -1,6 +1,5 @@
 package de.westnordost.streetcomplete.user
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -44,9 +43,7 @@ class QuestStatisticsByCountryFragment : Fragment(R.layout.fragment_quest_statis
         countryBubbleView.id = View.generateViewId()
         countryBubbleView.layoutParams = ViewGroup.LayoutParams(240,240)
         countryBubbleView.countryCode = countryCode
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            countryBubbleView.elevation = 6f.toPx(ctx)
-        }
+        countryBubbleView.elevation = 6f.toPx(ctx)
         countryBubbleView.setOnClickListener { v ->
             listener?.onClickedCountryFlag(countryCode, solvedCount, rank, v)
         }

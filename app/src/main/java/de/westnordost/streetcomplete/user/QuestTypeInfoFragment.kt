@@ -2,7 +2,6 @@ package de.westnordost.streetcomplete.user
 
 import android.animation.ValueAnimator
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -28,9 +27,7 @@ class QuestTypeInfoFragment : AbstractInfoFakeDialogFragment(R.layout.fragment_q
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            titleView.outlineProvider = CircularOutlineProvider
-        }
+        titleView.outlineProvider = CircularOutlineProvider
     }
 
     override fun onDestroy() {

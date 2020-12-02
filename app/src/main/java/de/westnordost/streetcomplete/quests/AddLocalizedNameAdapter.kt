@@ -135,10 +135,8 @@ class AddLocalizedNameAdapter(
     private fun getLanguageMenuItemTitle(languageTag: String): String {
         if (languageTag.isEmpty()) return context.getString(R.string.quest_streetName_menuItem_nolanguage)
         if (languageTag == "international") return context.getString(R.string.quest_streetName_menuItem_international)
-        val languageCode = languageTag.substringBefore('-')
         val isRomanization = languageTag.endsWith("Latn")
-        // if Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP was, could use Locale.forLanguageTag
-        val locale = Locale(languageCode)
+        val locale = Locale.forLanguageTag(languageTag)
 
         val displayLanguage = locale.displayLanguage
         val nativeDisplayLanguage = locale.getDisplayLanguage(locale)
@@ -155,17 +153,7 @@ class AddLocalizedNameAdapter(
                 )
             }
         } else {
-            if (displayLanguage == nativeDisplayLanguage) {
-                String.format(
-                    context.getString(R.string.quest_streetName_menuItem_language_with_script_simple),
-                    languageTag, displayLanguage, context.getString(R.string.quest_streetName_menuItem_romanized)
-                )
-            } else {
-                String.format(
-                    context.getString(R.string.quest_streetName_menuItem_language_with_script_native),
-                    languageTag, nativeDisplayLanguage, displayLanguage, context.getString(R.string.quest_streetName_menuItem_romanized)
-                )
-            }
+            return locale.displayScript
         }
     }
 

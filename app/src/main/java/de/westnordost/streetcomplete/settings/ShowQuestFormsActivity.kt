@@ -2,20 +2,18 @@ package de.westnordost.streetcomplete.settings
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.westnordost.osmapi.map.data.LatLon
 import de.westnordost.osmapi.map.data.OsmLatLon
 import de.westnordost.osmapi.map.data.OsmNode
 import de.westnordost.osmapi.map.data.OsmWay
-
-import javax.inject.Inject
 import de.westnordost.streetcomplete.Injector
 import de.westnordost.streetcomplete.Prefs
 import de.westnordost.streetcomplete.R
@@ -29,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_show_quest_forms.*
 import kotlinx.android.synthetic.main.row_quest_display.view.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.util.*
+import javax.inject.Inject
 
 /** activity only used in debug, to show all the different forms for the different quests. */
 class ShowQuestFormsActivity : AppCompatActivity(), AbstractQuestAnswerFragment.Listener {
@@ -48,7 +47,7 @@ class ShowQuestFormsActivity : AppCompatActivity(), AbstractQuestAnswerFragment.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_show_quest_forms)
-        toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_close_white_24dp)
+        toolbar.navigationIcon = getDrawable(R.drawable.ic_close_white_24dp)
         toolbar.setNavigationOnClickListener { onBackPressed() }
         toolbar.title = "Show Quest Forms"
 

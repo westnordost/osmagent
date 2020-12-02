@@ -4,11 +4,9 @@ import android.content.Context
 import android.graphics.Outline
 import android.graphics.Path
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isInvisible
 import de.westnordost.streetcomplete.R
@@ -34,13 +32,10 @@ class AchievementIconView @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.view_achievement_icon, this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            outlineProvider = AchievementFrameOutlineProvider
-        }
+        outlineProvider = AchievementFrameOutlineProvider
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 object AchievementFrameOutlineProvider : ViewOutlineProvider() {
     private val points = arrayOf(
         0.45,0.98,

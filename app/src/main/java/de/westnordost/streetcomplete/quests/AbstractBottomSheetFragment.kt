@@ -2,7 +2,6 @@ package de.westnordost.streetcomplete.quests
 
 
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -60,18 +59,16 @@ abstract class AbstractBottomSheetFragment : Fragment(), IsCloseableBottomSheet 
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val cornerRadius = resources.getDimension(R.dimen.speech_bubble_rounded_corner_radius)
-            val margin = resources.getDimensionPixelSize(R.dimen.horizontal_speech_bubble_margin)
-            val topMargin = -resources.getDimensionPixelSize(R.dimen.quest_form_speech_bubble_top_margin)
-            speechBubbleTitleContainer.outlineProvider = RoundRectOutlineProvider(
-                cornerRadius, margin, topMargin, margin, margin
-            )
+        val cornerRadius = resources.getDimension(R.dimen.speech_bubble_rounded_corner_radius)
+        val margin = resources.getDimensionPixelSize(R.dimen.horizontal_speech_bubble_margin)
+        val topMargin = -resources.getDimensionPixelSize(R.dimen.quest_form_speech_bubble_top_margin)
+        speechBubbleTitleContainer.outlineProvider = RoundRectOutlineProvider(
+            cornerRadius, margin, topMargin, margin, margin
+        )
 
-            speechbubbleContentContainer.outlineProvider = RoundRectOutlineProvider(
-                cornerRadius, margin, margin, margin, margin
-            )
-        }
+        speechbubbleContentContainer.outlineProvider = RoundRectOutlineProvider(
+            cornerRadius, margin, margin, margin, margin
+        )
 
         speechBubbleTitleContainer.setOnClickListener {
             bottomSheetBehavior.apply {
@@ -124,26 +121,23 @@ abstract class AbstractBottomSheetFragment : Fragment(), IsCloseableBottomSheet 
     }
 
     private fun setupFittingToSystemWindowInsets() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            view?.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
+        view?.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets ->
+            scrollViewChild.updatePadding(bottom = insets.systemWindowInsetBottom)
 
-                scrollViewChild.updatePadding(bottom = insets.systemWindowInsetBottom)
-
-                okButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    val defaultMargin = 8f.toPx(v.context).toInt()
-                    updateMargins(bottom = insets.systemWindowInsetBottom + defaultMargin)
-                }
-
-                bottomSheetContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    updateMargins(
-                        top = insets.systemWindowInsetTop,
-                        left = insets.systemWindowInsetLeft,
-                        right = insets.systemWindowInsetRight
-                    )
-                }
-
-                insets
+            okButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                val defaultMargin = 8f.toPx(v.context).toInt()
+                updateMargins(bottom = insets.systemWindowInsetBottom + defaultMargin)
             }
+
+            bottomSheetContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                updateMargins(
+                    top = insets.systemWindowInsetTop,
+                    left = insets.systemWindowInsetLeft,
+                    right = insets.systemWindowInsetRight
+                )
+            }
+
+            insets
         }
     }
 

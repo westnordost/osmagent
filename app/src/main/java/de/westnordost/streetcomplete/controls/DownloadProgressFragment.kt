@@ -38,7 +38,7 @@ class DownloadProgressFragment : Fragment(R.layout.fragment_download_progress),
 
         override fun onStarted(item: DownloadItem) {
             startedButNoQuestsYet = false
-            launch(Dispatchers.Main) { progressView.enqueueIcon(resources.getDrawable(item.iconResId)) }
+            launch(Dispatchers.Main) { progressView.enqueueIcon(requireContext().getDrawable(item.iconResId)) }
         }
 
         override fun onFinished(item: DownloadItem) {
@@ -103,7 +103,7 @@ class DownloadProgressFragment : Fragment(R.layout.fragment_download_progress),
             showProgressView()
             val item = downloadProgressSource.currentDownloadItem
             if (item != null) {
-                progressView.setIcon(resources.getDrawable(item.iconResId))
+                progressView.setIcon(requireContext().getDrawable(item.iconResId))
             }
         } else {
             hideProgressView()

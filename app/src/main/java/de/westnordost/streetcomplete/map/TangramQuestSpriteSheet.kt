@@ -39,7 +39,7 @@ import kotlin.math.sqrt
         val questIconResIds = questTypeRegistry.all.map { it.icon }.toSortedSet()
 
         val spriteSheetEntries: MutableList<String> = ArrayList(questIconResIds.size)
-        val questPin = context.resources.getDrawable(R.drawable.quest_pin)
+        val questPin = context.getDrawable(R.drawable.quest_pin)!!
         val iconSize = questPin.intrinsicWidth
         val questIconSize = 2 * iconSize / 3
         val questIconOffsetX = 56 * iconSize / 192
@@ -54,7 +54,7 @@ import kotlin.math.sqrt
             val y = i / sheetSideLength * iconSize
             questPin.setBounds(x, y, x + iconSize, y + iconSize)
             questPin.draw(canvas)
-            val questIcon = context.resources.getDrawable(questIconResId)
+            val questIcon = context.getDrawable(questIconResId)!!
             val questX = x + questIconOffsetX
             val questY = y + questIconOffsetY
             questIcon.setBounds(questX, questY, questX + questIconSize, questY + questIconSize)
