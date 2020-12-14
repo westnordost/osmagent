@@ -33,7 +33,6 @@ import de.westnordost.streetcomplete.Prefs
 import de.westnordost.streetcomplete.R
 import de.westnordost.streetcomplete.ktx.awaitLayout
 import de.westnordost.streetcomplete.ktx.containsAll
-import de.westnordost.streetcomplete.ktx.setMargins
 import de.westnordost.streetcomplete.ktx.tryStartActivity
 import de.westnordost.streetcomplete.map.tangram.*
 import de.westnordost.streetcomplete.view.insets_animation.respectSystemInsets
@@ -104,7 +103,7 @@ open class MapFragment : Fragment(),
         mapTileProviderLink.text = vectorTileProvider.copyrightText
         mapTileProviderLink.setOnClickListener { showOpenUrlDialog(vectorTileProvider.copyrightLink) }
 
-        attributionContainer.respectSystemInsets(View::setMargins)
+        attributionContainer.respectSystemInsets()
 
         launch { initMap() }
     }

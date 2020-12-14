@@ -8,9 +8,7 @@ import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.os.postDelayed
-import androidx.core.view.doOnLayout
-import androidx.core.view.doOnPreDraw
-import androidx.core.view.updateLayoutParams
+import androidx.core.view.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -72,3 +70,8 @@ fun View.updateMargins(left: Int? = null, top: Int? = null, right: Int? = null, 
         )
     }
 }
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun View.setOnApplyWindowInsetsCompatListener(
+    noinline listener: ((View, WindowInsetsCompat) -> WindowInsetsCompat)?
+) = ViewCompat.setOnApplyWindowInsetsListener(this, listener)

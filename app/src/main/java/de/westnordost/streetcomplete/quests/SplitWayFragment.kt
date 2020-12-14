@@ -20,13 +20,12 @@ import de.westnordost.osmapi.map.data.LatLon
 import de.westnordost.osmapi.map.data.OsmLatLon
 import de.westnordost.osmapi.map.data.Way
 import de.westnordost.streetcomplete.Injector
-
 import de.westnordost.streetcomplete.R
-import de.westnordost.streetcomplete.data.quest.QuestGroup
 import de.westnordost.streetcomplete.data.osm.elementgeometry.ElementPolylinesGeometry
 import de.westnordost.streetcomplete.data.osm.splitway.SplitAtLinePosition
 import de.westnordost.streetcomplete.data.osm.splitway.SplitAtPoint
 import de.westnordost.streetcomplete.data.osm.splitway.SplitPolylineAtPosition
+import de.westnordost.streetcomplete.data.quest.QuestGroup
 import de.westnordost.streetcomplete.ktx.*
 import de.westnordost.streetcomplete.util.SoundFx
 import de.westnordost.streetcomplete.util.alongTrackDistanceTo
@@ -86,7 +85,7 @@ class SplitWayFragment : Fragment(R.layout.fragment_split_way),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bottomSheetContainer.respectSystemInsets(View::setMargins)
+        bottomSheetContainer.respectSystemInsets()
 
         splitWayRoot.setOnTouchListener { _, event ->
             clickPos = PointF(event.x, event.y)

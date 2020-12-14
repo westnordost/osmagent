@@ -10,7 +10,9 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.*
+import androidx.core.view.isGone
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
@@ -56,10 +58,10 @@ abstract class AbstractBottomSheetFragment : Fragment(), IsCloseableBottomSheet 
 
         closeButton.setOnClickListener { activity?.onBackPressed() }
 
-        view.respectSystemInsets { left, top, right, bottom ->
-            scrollViewChild.updatePadding(bottom = bottom)
-            bottomSheetContainer.updateMargins(top = top, left = left, right = right)
-            okButton.updateMargins(bottom = bottom + 8f.toPx(context).toInt())
+        view.respectSystemInsets {
+            scrollViewChild.updatePadding(bottom = it.bottom)
+            bottomSheetContainer.updateMargins(top = it.top, left = it.left, right = it.right)
+            okButton.updateMargins(bottom = it.bottom + 8f.toPx(context).toInt())
         }
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)

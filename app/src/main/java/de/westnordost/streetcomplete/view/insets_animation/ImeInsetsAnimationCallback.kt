@@ -5,15 +5,18 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsAnimation
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.Insets
+import de.westnordost.streetcomplete.ktx.setMargins
+import de.westnordost.streetcomplete.ktx.setOnApplyWindowInsetsCompatListener
+import de.westnordost.streetcomplete.ktx.toCompatInsets
 
 /** Make the keyboard appear and disappear smoothly. Must be set on both
  *  setOnApplyWindowInsetsListener and setWindowInsetsAnimationCallback */
 @RequiresApi(Build.VERSION_CODES.R)
 class ImeInsetsAnimationCallback(
     private val view: View,
-    private val onNewInsets: View.(left: Int, top: Int, right: Int, bottom: Int) -> Unit
+    private val onNewInsets: View.(insets: Insets) -> Unit
 ) : WindowInsetsAnimation.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE), View.OnApplyWindowInsetsListener {
-
     private var isAnimating = false
     private var prevInsets: WindowInsets? = null
 
@@ -42,24 +45,21 @@ class ImeInsetsAnimationCallback(
     }
 
     private fun applyNewInsets(insets: WindowInsets) {
-        val typeInsets = insets.getInsets(WindowInsets.Type.ime() or WindowInsets.Type.systemBars())
-        onNewInsets(view, typeInsets.left, typeInsets.top, typeInsets.right, typeInsets.bottom)
+        view.onNewInsets(insets.getInsets(WindowInsets.Type.ime() or WindowInsets.Type.systemBars())
+            .toCompatInsets())
     }
 }
 
-fun View.respectSystemInsets(onNewInsets: View.(left: Int, top: Int, right: Int, bottom: Int) -> Unit = View::setPadding) {
+fun View.respectSystemInsets(
+    onNewInsets: View.(insets: Insets) -> Unit = { setMargins(it.left, it.top, it.right, it.bottom) }
+) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val imeAnimationCallback = ImeInsetsAnimationCallback(this, onNewInsets)
         setOnApplyWindowInsetsListener(imeAnimationCallback)
         setWindowInsetsAnimationCallback(imeAnimationCallback)
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        setOnApplyWindowInsetsListener { v, windowInsets ->
-            onNewInsets(v,
-                windowInsets.systemWindowInsetLeft,
-                windowInsets.systemWindowInsetTop,
-                windowInsets.systemWindowInsetRight,
-                windowInsets.systemWindowInsetBottom
-            )
+    } else {
+        setOnApplyWindowInsetsCompatListener { v, windowInsets ->
+            v.onNewInsets(windowInsets.systemWindowInsets)
             windowInsets
         }
     }

@@ -29,6 +29,7 @@ import androidx.core.content.getSystemService
 import androidx.core.graphics.minus
 import androidx.core.graphics.toPointF
 import androidx.core.graphics.toRectF
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
@@ -92,7 +93,7 @@ class MainFragment : Fragment(R.layout.fragment_main),
 
     private var locationWhenOpenedQuest: Location? = null
 
-    private var windowInsets: Rect? = null
+    private var windowInsets: WindowInsetsCompat? = null
 
     private var mapFragment: QuestsMapFragment? = null
     private val bottomSheetFragment: Fragment? get() = childFragmentManagerOrNull?.findFragmentByTag(BOTTOM_SHEET)
@@ -135,10 +136,8 @@ class MainFragment : Fragment(R.layout.fragment_main),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mapControls.respectSystemInsets(View::setMargins)
-        view.respectSystemInsets { left, top, right, bottom ->
-            windowInsets = Rect(left, top, right, bottom)
-        }
+        mapControls.respectSystemInsets()
+        view.respectSystemInsets { windowInsets = WindowInsetsCompat.Builder().setSystemWindowInsets(it).build() }
 
         locationPointerPin.setOnClickListener { onClickLocationPointer() }
 
@@ -429,7 +428,7 @@ class MainFragment : Fragment(R.layout.fragment_main),
     //region Location - Request location and update location status
 
     private fun updateLocationAvailability() {
-        if (LocationUtil.isLocationOn(activity)) {
+        if (requireContext().getSystemService<LocationManager>()!!.isLocationEnabledCompat) {
             onLocationIsEnabled()
         } else {
             onLocationIsDisabled()
@@ -661,7 +660,7 @@ class MainFragment : Fragment(R.layout.fragment_main),
 
         var target = mapFragment.getClippedPointOf(displayedPosition) ?: return
         windowInsets?.let {
-            target -= PointF(it.left.toFloat(), it.top.toFloat())
+            target -= PointF(it.systemWindowInsetLeft.toFloat(), it.systemWindowInsetTop.toFloat())
         }
         val intersection = findClosestIntersection(mapControls, target)
         if (intersection != null) {

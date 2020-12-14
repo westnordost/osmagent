@@ -5,12 +5,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import de.westnordost.streetcomplete.R
+import de.westnordost.streetcomplete.ktx.isLocationEnabledCompat
 
 /** Manages the process to ensure that the app can access the user's location. Two steps:
  *
@@ -110,7 +113,7 @@ class LocationRequestFragment : Fragment() {
     /* Step 1: Ask for location to be turned on */
 
     private fun requestLocationSettingsToBeOn() {
-        if (LocationUtil.isLocationOn(context)) {
+        if (requireContext().getSystemService<LocationManager>()!!.isLocationEnabledCompat) {
             state = LocationState.ENABLED
             nextStep()
         } else {
