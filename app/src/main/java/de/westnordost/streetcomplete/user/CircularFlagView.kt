@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
 import de.westnordost.streetcomplete.R
+import de.westnordost.streetcomplete.ktx.getAppCompatDrawable
 import de.westnordost.streetcomplete.ktx.getYamlObject
 import java.util.*
 import kotlin.math.min
@@ -87,7 +88,7 @@ class CircularFlagView @JvmOverloads constructor(
             if (resId == 0) {
                 drawable = null
             } else {
-                val d = resources.getDrawable(resId)
+                val d = context.getAppCompatDrawable(resId)!!
                 val alignment = get(resources, countryCode)
                 boundsOffset = if (alignment != null) {
                     getBoundsOffset(d, alignment)

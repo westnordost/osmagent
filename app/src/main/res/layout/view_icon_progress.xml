@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:parentTag="android.widget.RelativeLayout"
     tools:background="#f0f"
@@ -27,10 +28,10 @@
         android:id="@+id/checkmarkView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="6dp"
-        android:src="@drawable/ic_animated_checkmark_circle"
         android:alpha="0"
+        android:padding="6dp"
+        app:srcCompat="@drawable/ic_animated_checkmark_circle"
         tools:alpha="1"
-        tools:src="@drawable/ic_checkmark_circle"/>
+        tools:src="@drawable/ic_checkmark_circle" />
 
 </merge>

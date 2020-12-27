@@ -16,10 +16,10 @@
             android:id="@+id/mailOpenImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_animated_open_mail"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_animated_open_mail" />
 
         <RelativeLayout
             android:id="@+id/speechbubbleContentContainer"
@@ -67,12 +67,12 @@
             android:id="@+id/mailFrontImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_mail_front"
+            android:alpha="0"
             app:layout_constraintBottom_toBottomOf="@id/mailOpenImageView"
             app:layout_constraintEnd_toEndOf="@id/mailOpenImageView"
             app:layout_constraintStart_toStartOf="@id/mailOpenImageView"
             app:layout_constraintTop_toTopOf="@id/mailOpenImageView"
-            android:alpha="0"/>
+            app:srcCompat="@drawable/ic_mail_front" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -20,30 +20,30 @@
 
     <ImageView
         android:id="@+id/shineView1"
-        android:src="@drawable/shine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:scaleX="1.4"
         android:scaleY="1.4"
-        app:layout_constraintTop_toTopOf="@id/dialogContainer"
         app:layout_constraintBottom_toBottomOf="@id/dialogContainer"
         app:layout_constraintLeft_toLeftOf="@id/dialogContainer"
-        app:layout_constraintRight_toRightOf="@id/dialogContainer"/>
+        app:layout_constraintRight_toRightOf="@id/dialogContainer"
+        app:layout_constraintTop_toTopOf="@id/dialogContainer"
+        app:srcCompat="@drawable/shine" />
 
     <ImageView
         android:id="@+id/shineView2"
-        android:src="@drawable/shine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:rotation="180"
         android:scaleType="centerCrop"
         android:scaleX="1.4"
         android:scaleY="1.4"
-        app:layout_constraintTop_toTopOf="@id/dialogContainer"
         app:layout_constraintBottom_toBottomOf="@id/dialogContainer"
         app:layout_constraintLeft_toLeftOf="@id/dialogContainer"
-        app:layout_constraintRight_toRightOf="@id/dialogContainer"/>
+        app:layout_constraintRight_toRightOf="@id/dialogContainer"
+        app:layout_constraintTop_toTopOf="@id/dialogContainer"
+        app:srcCompat="@drawable/shine" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dialogContainer"

@@ -65,12 +65,12 @@
                     android:id="@+id/closeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="center"
-                    android:src = "@drawable/ic_close_24dp"
                     android:background="?android:attr/actionBarItemBackground"
-                    android:visibility="gone"
                     android:contentDescription="@string/close"
-                    android:padding="16dp"/>
+                    android:padding="16dp"
+                    android:scaleType="center"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_close_24dp" />
 
             </LinearLayout>
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/compassView"
     android:layout_width="38dp"
     android:layout_height="38dp"
@@ -11,23 +12,22 @@
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true">
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:id="@+id/compassNorth"
-    android:layout_alignParentTop="true"
-    android:text="@string/compass_north_one_letter"
-    android:textColor="#000"
-    android:textSize="10dp"/>
+    <TextView
+        android:id="@+id/compassNorth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/compass_north_one_letter"
+        android:textColor="#000"
+        android:textSize="10dp" />
 
-<ImageView
-    android:layout_width="16dp"
-    android:layout_height="16dp"
-    android:layout_centerHorizontal="true"
-    android:src="@drawable/ic_compass_needle_black_24dp"
-    android:tint="#cc3333"
-    android:id="@+id/compassNeedleView"
-    android:layout_below="@+id/compassNorth"
-    />
+    <ImageView
+        android:id="@+id/compassNeedleView"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_below="@+id/compassNorth"
+        android:layout_centerHorizontal="true"
+        android:tint="#cc3333"
+        app:srcCompat="@drawable/ic_compass_needle_black_24dp" />
 </RelativeLayout>

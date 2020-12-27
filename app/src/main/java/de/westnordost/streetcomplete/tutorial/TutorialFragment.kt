@@ -2,7 +2,6 @@ package de.westnordost.streetcomplete.tutorial
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +11,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.BounceInterpolator
 import androidx.fragment.app.Fragment
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import de.westnordost.streetcomplete.R
 import de.westnordost.streetcomplete.ktx.toDp
 import de.westnordost.streetcomplete.ktx.toPx
@@ -191,9 +191,7 @@ class TutorialFragment : Fragment(R.layout.fragment_tutorial) {
                 .alpha(1f)
                 .start()
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                (checkmarkView.drawable as? AnimatedVectorDrawable)?.start()
-            }
+            (checkmarkView.drawable as? AnimatedVectorDrawableCompat)?.start()
         }, 1400L)
     }
 

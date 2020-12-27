@@ -10,6 +10,7 @@ import de.westnordost.streetcomplete.BuildConfig
 import de.westnordost.streetcomplete.Prefs
 import de.westnordost.streetcomplete.R
 import de.westnordost.streetcomplete.data.quest.QuestTypeRegistry
+import de.westnordost.streetcomplete.ktx.getAppCompatDrawable
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -54,7 +55,7 @@ import kotlin.math.sqrt
             val y = i / sheetSideLength * iconSize
             questPin.setBounds(x, y, x + iconSize, y + iconSize)
             questPin.draw(canvas)
-            val questIcon = context.resources.getDrawable(questIconResId)
+            val questIcon = context.getAppCompatDrawable(questIconResId)!!
             val questX = x + questIconOffsetX
             val questY = y + questIconOffsetY
             questIcon.setBounds(questX, questY, questX + questIconSize, questY + questIconSize)

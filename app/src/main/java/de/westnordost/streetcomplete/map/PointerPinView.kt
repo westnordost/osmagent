@@ -15,8 +15,12 @@ import android.view.ViewOutlineProvider
 import androidx.core.content.withStyledAttributes
 import androidx.core.graphics.withRotation
 import de.westnordost.streetcomplete.R
+import de.westnordost.streetcomplete.ktx.getAppCompatDrawable
 import de.westnordost.streetcomplete.ktx.toPx
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.min
+import kotlin.math.sin
 
 
 /** A view for the pointer pin that ought to be displayed at the edge of the screen.
@@ -27,8 +31,7 @@ class PointerPinView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
-    private val pointerPin: Drawable = context.resources.getDrawable(R.drawable.quest_pin_pointer)
+    private val pointerPin = context.getAppCompatDrawable(R.drawable.quest_pin_pointer)!!
     private var pointerPinBitmap: Bitmap? = null
     private val antiAliasPaint: Paint = Paint().apply {
         isAntiAlias = true
@@ -52,8 +55,8 @@ class PointerPinView @JvmOverloads constructor(
             invalidate()
         }
 
-    fun setPinIconResource(resId: Int) {
-        pinIconDrawable = context.resources.getDrawable(resId)
+    private fun setPinIconResource(resId: Int) {
+        pinIconDrawable = context.getAppCompatDrawable(resId)
     }
 
     init {

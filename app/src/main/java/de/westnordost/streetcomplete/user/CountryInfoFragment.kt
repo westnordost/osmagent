@@ -13,6 +13,7 @@ import androidx.core.animation.doOnStart
 import androidx.core.net.toUri
 import androidx.core.view.isGone
 import de.westnordost.streetcomplete.R
+import de.westnordost.streetcomplete.ktx.getAppCompatDrawable
 import de.westnordost.streetcomplete.ktx.tryStartActivity
 import kotlinx.android.synthetic.main.fragment_country_info_dialog.*
 import java.util.*
@@ -45,7 +46,7 @@ class CountryInfoFragment : AbstractInfoFakeDialogFragment(R.layout.fragment_cou
         revealAnim.start()
         circularRevealAnimator = revealAnim
 
-        val flag = resources.getDrawable(getFlagResId(countryCode))
+        val flag = requireContext().getAppCompatDrawable(getFlagResId(countryCode))!!
         titleImageView.setImageDrawable(flag)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

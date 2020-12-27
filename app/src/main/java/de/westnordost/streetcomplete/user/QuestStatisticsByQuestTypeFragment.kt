@@ -14,6 +14,7 @@ import de.westnordost.streetcomplete.R
 import de.westnordost.streetcomplete.data.quest.QuestType
 import de.westnordost.streetcomplete.data.quest.QuestTypeRegistry
 import de.westnordost.streetcomplete.data.user.QuestStatisticsDao
+import de.westnordost.streetcomplete.ktx.getAppCompatDrawable
 import de.westnordost.streetcomplete.ktx.toPx
 import de.westnordost.streetcomplete.view.CircularOutlineProvider
 import kotlinx.android.synthetic.main.fragment_quest_statistics_ball_pit.*
@@ -62,7 +63,7 @@ class QuestStatisticsByQuestTypeFragment : Fragment(R.layout.fragment_quest_stat
         val clickableContainer = FrameLayout(ctx)
         clickableContainer.layoutParams = ViewGroup.LayoutParams(256,256)
         // foreground attribute only exists on FrameLayout up until KITKAT
-        clickableContainer.foreground = resources.getDrawable(R.drawable.round_pressed)
+        clickableContainer.foreground = requireContext().getAppCompatDrawable(R.drawable.round_pressed)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             clickableContainer.elevation = 6f.toPx(ctx)
             clickableContainer.outlineProvider = CircularOutlineProvider

@@ -20,25 +20,25 @@
 
     <ImageView
         android:id="@+id/shineView1"
-        android:src="@drawable/shine"
         android:layout_width="800dp"
         android:layout_height="800dp"
-        app:layout_constraintTop_toTopOf="@id/dialogContainer"
         app:layout_constraintBottom_toBottomOf="@id/dialogContainer"
-        app:layout_constraintStart_toStartOf="@id/dialogContainer"
         app:layout_constraintEnd_toEndOf="@id/dialogContainer"
+        app:layout_constraintStart_toStartOf="@id/dialogContainer"
+        app:layout_constraintTop_toTopOf="@id/dialogContainer"
+        app:srcCompat="@drawable/shine"
         tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/shineView2"
-        android:src="@drawable/shine"
         android:layout_width="800dp"
         android:layout_height="800dp"
         android:rotation="180"
-        app:layout_constraintTop_toTopOf="@id/dialogContainer"
         app:layout_constraintBottom_toBottomOf="@id/dialogContainer"
-        app:layout_constraintStart_toStartOf="@id/dialogContainer"
         app:layout_constraintEnd_toEndOf="@id/dialogContainer"
+        app:layout_constraintStart_toStartOf="@id/dialogContainer"
+        app:layout_constraintTop_toTopOf="@id/dialogContainer"
+        app:srcCompat="@drawable/shine"
         tools:ignore="ContentDescription" />
 
     <androidx.constraintlayout.widget.ConstraintLayout

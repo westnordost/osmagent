@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -48,22 +49,22 @@
 
     <ImageView
         android:id="@+id/nameSuggestionsButton"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_drop_down_white_24dp"
-        android:layout_toStartOf="@+id/deleteButton"
         android:layout_centerVertical="true"
         android:layout_marginEnd="14dp"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+        android:layout_toStartOf="@+id/deleteButton"
+        app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
 
     <ImageView
         android:id="@+id/deleteButton"
-        android:src="@drawable/ic_close_24dp"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="44dp"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
-        tools:ignore="HardcodedText"/>
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/ic_close_24dp"
+        tools:ignore="HardcodedText" />
 
 </RelativeLayout>

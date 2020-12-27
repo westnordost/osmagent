@@ -20,10 +20,9 @@
         android:id="@+id/buildingImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/building_levels_illustration"
-        android:scaleType="fitEnd"
         android:layout_centerHorizontal="true"
-        />
+        android:scaleType="fitEnd"
+        app:srcCompat="@drawable/building_levels_illustration" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -135,11 +134,11 @@
 
         <ImageView
             android:id="@+id/lastBuildingIllustrationIcon"
-            android:src="@drawable/ic_building_levels_illustration"
-            android:layout_toRightOf="@id/lastLevelsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:ignore="RtlHardcoded"/>
+            android:layout_toRightOf="@id/lastLevelsLabel"
+            app:srcCompat="@drawable/ic_building_levels_illustration"
+            tools:ignore="RtlHardcoded" />
 
         <TextView
             android:id="@+id/lastLevelsLabel"

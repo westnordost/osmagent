@@ -3,14 +3,13 @@ package de.westnordost.streetcomplete.controls
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.content.Context
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import de.westnordost.streetcomplete.R
 import kotlinx.android.synthetic.main.view_icon_progress.view.*
 
@@ -59,9 +58,7 @@ class IconProgressView @JvmOverloads constructor(
             .alpha(1f)
             .start()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            (checkmarkView.drawable as? AnimatedVectorDrawable)?.start()
-        }
+        (checkmarkView.drawable as? AnimatedVectorDrawableCompat)?.start()
 
         val hardcodedCheckmarkAnimationDuration = (animatorDurationScale * 650).toLong()
         mainHandler.postDelayed(onFinished, hardcodedCheckmarkAnimationDuration)

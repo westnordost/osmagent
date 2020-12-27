@@ -15,6 +15,7 @@ import de.westnordost.streetcomplete.data.user.UserStore
 import de.westnordost.streetcomplete.data.user.achievements.Achievement
 import de.westnordost.streetcomplete.data.user.achievements.UserAchievementsSource
 import de.westnordost.streetcomplete.ktx.awaitPreDraw
+import de.westnordost.streetcomplete.ktx.getAppCompatDrawable
 import de.westnordost.streetcomplete.ktx.toPx
 import de.westnordost.streetcomplete.view.GridLayoutSpacingItemDecoration
 import de.westnordost.streetcomplete.view.ListAdapter
@@ -105,7 +106,7 @@ class AchievementsFragment : Fragment(R.layout.fragment_achievements),
             override fun onBind(with: Pair<Achievement, Int>) {
                 val achievement = with.first
                 val level = with.second
-                itemView.achievementIconView.icon = resources.getDrawable(achievement.icon)
+                itemView.achievementIconView.icon = requireContext().getAppCompatDrawable(achievement.icon)
                 itemView.achievementIconView.level = level
                 itemView.achievementIconView.setOnClickListener {
                     listener?.onClickedAchievement(achievement, level, itemView.achievementIconView)

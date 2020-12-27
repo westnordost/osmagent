@@ -14,6 +14,7 @@ import androidx.core.content.getSystemService
 import androidx.core.view.children
 import androidx.core.view.isGone
 import de.westnordost.streetcomplete.R
+import de.westnordost.streetcomplete.ktx.getAppCompatDrawable
 import de.westnordost.streetcomplete.ktx.numberOrNull
 import de.westnordost.streetcomplete.quests.AbstractQuestFormAnswerFragment
 import de.westnordost.streetcomplete.quests.OtherAnswer
@@ -89,7 +90,7 @@ class AddMaxSpeedForm : AbstractQuestFormAnswerFragment<MaxSpeedAnswer>() {
         // this is necessary because the inflated image view uses the activity context rather than
         // the fragment / layout inflater context' resources to access it's drawable
         val img = rightSideContainer.findViewById<ImageView>(R.id.livingStreetImage)
-        img?.setImageDrawable(resources.getDrawable(R.drawable.ic_living_street))
+        img?.setImageDrawable(requireContext().getAppCompatDrawable(R.drawable.ic_living_street))
 
         speedInput = rightSideContainer.findViewById(R.id.maxSpeedInput)
 

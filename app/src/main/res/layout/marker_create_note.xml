@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/markerLayoutContainer"
     android:layout_width="match_parent"
@@ -36,7 +37,7 @@
                 android:layout_height="42dp"
                 android:layout_marginTop="7dp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_quest_create_note" />
+                app:srcCompat="@drawable/ic_quest_create_note" />
 
         </RelativeLayout>
 

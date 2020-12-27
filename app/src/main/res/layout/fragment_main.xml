@@ -46,13 +46,13 @@
 
         <ImageButton
             android:id="@+id/mainMenuButton"
+            style="@style/RoundWhiteButton"
             android:layout_width="@dimen/map_button_size"
             android:layout_height="@dimen/map_button_size"
-            android:scaleType="center"
-            style="@style/RoundWhiteButton"
-            android:src="@drawable/ic_menu_black_24dp"
+            android:layout_alignParentRight="true"
             android:contentDescription="@string/map_btn_menu"
-            android:layout_alignParentRight="true"/>
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_menu_black_24dp" />
 
         <fragment
             android:id="@+id/notification_button_fragment"
@@ -85,14 +85,13 @@
             />
 
             <ImageView
+                android:id="@+id/compassNeedleView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/compassNeedleView"
-                android:src="@drawable/ic_compass_needle_black_24dp"
-                android:tint="#cc3333"
                 android:layout_below="@+id/compassNorth"
-                />
+                android:layout_centerHorizontal="true"
+                android:tint="#cc3333"
+                app:srcCompat="@drawable/ic_compass_needle_black_24dp" />
 
         </RelativeLayout>
 
@@ -109,21 +108,21 @@
 
             <ImageButton
                 android:id="@+id/zoomInButton"
+                style="@style/RoundWhiteButton"
                 android:layout_width="@dimen/map_button_size"
                 android:layout_height="@dimen/map_button_size"
+                android:contentDescription="@string/map_btn_zoom_in"
                 android:scaleType="center"
-                style="@style/RoundWhiteButton"
-                android:src="@drawable/ic_zoom_plus_black_24dp"
-                android:contentDescription="@string/map_btn_zoom_in"/>
+                app:srcCompat="@drawable/ic_zoom_plus_black_24dp" />
 
             <ImageButton
                 android:id="@+id/zoomOutButton"
+                style="@style/RoundWhiteButton"
                 android:layout_width="@dimen/map_button_size"
                 android:layout_height="@dimen/map_button_size"
+                android:contentDescription="@string/map_btn_zoom_out"
                 android:scaleType="center"
-                style="@style/RoundWhiteButton"
-                android:src="@drawable/ic_zoom_minus_black_24dp"
-                android:contentDescription="@string/map_btn_zoom_out"/>
+                app:srcCompat="@drawable/ic_zoom_minus_black_24dp" />
 
             <de.westnordost.streetcomplete.location.LocationStateButton
                 android:id="@+id/gpsTrackingButton"

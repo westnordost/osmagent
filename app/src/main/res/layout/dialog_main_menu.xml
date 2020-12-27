@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
     <GridLayout
         android:id="@+id/bigMenuItemsContainer"
@@ -22,8 +21,8 @@
             android:textAppearance="@android:style/TextAppearance.Theme.Dialog"
             android:text="@string/user_profile"
             android:layout_gravity="center"
-            android:drawableTop="@drawable/ic_profile_48dp"
-            style="?android:attr/borderlessButtonStyle"/>
+            style="?android:attr/borderlessButtonStyle"
+            app:drawableTopCompat="@drawable/ic_profile_48dp" />
 
         <TextView
             android:id="@+id/settingsButton"
@@ -33,8 +32,8 @@
             android:textAppearance="@android:style/TextAppearance.Theme.Dialog"
             android:layout_gravity="center"
             android:text="@string/action_settings"
-            android:drawableTop="@drawable/ic_settings_48dp"
-            style="?android:attr/borderlessButtonStyle" />
+            style="?android:attr/borderlessButtonStyle"
+            app:drawableTopCompat="@drawable/ic_settings_48dp" />
 
         <TextView
             android:id="@+id/aboutButton"
@@ -44,8 +43,8 @@
             android:textAppearance="@android:style/TextAppearance.Theme.Dialog"
             android:layout_gravity="center"
             android:text="@string/action_about2"
-            android:drawableTop="@drawable/ic_info_outline_48dp"
-            style="?android:attr/borderlessButtonStyle" />
+            style="?android:attr/borderlessButtonStyle"
+            app:drawableTopCompat="@drawable/ic_info_outline_48dp" />
 
     </GridLayout>
 
@@ -73,12 +72,11 @@
             android:id="@+id/downloadButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_search_24dp"
             android:padding="8dp"
             android:text="@string/action_download"
             android:textAppearance="@android:style/TextAppearance.Theme.Dialog"
             style="?android:attr/borderlessButtonStyle"
-            />
+            app:drawableStartCompat="@drawable/ic_search_24dp" />
 
     </LinearLayout>
 

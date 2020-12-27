@@ -12,9 +12,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_file_upload_inverted_48dp"
         android:drawablePadding="8dp"
-        app:drawableTint="@color/text"
         android:text="@string/dialog_tutorial_upload"
-        android:textAppearance="@android:style/TextAppearance.Theme.Dialog"/>
+        android:textAppearance="@android:style/TextAppearance.Theme.Dialog"
+        app:drawableStartCompat="@drawable/ic_file_upload_inverted_48dp"
+        app:drawableTint="@color/text" />
 </LinearLayout>

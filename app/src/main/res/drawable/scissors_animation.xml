@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
-android:drawable="@drawable/scissors" >
-    <item android:drawable="@drawable/scissors" />
-</layer-list>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/scissors">
+    <target
+        android:name="scissorGroupLeft"
+        android:animation="@animator/scissor_left" />
+    <target
+        android:name="scissorGroupRight"
+        android:animation="@animator/scissor_right" />
+</animated-vector>

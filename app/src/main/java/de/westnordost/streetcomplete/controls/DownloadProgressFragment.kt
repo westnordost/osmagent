@@ -9,6 +9,7 @@ import de.westnordost.streetcomplete.R
 import de.westnordost.streetcomplete.data.download.DownloadItem
 import de.westnordost.streetcomplete.data.download.DownloadProgressListener
 import de.westnordost.streetcomplete.data.download.DownloadProgressSource
+import de.westnordost.streetcomplete.ktx.getAppCompatDrawable
 import de.westnordost.streetcomplete.ktx.toPx
 import de.westnordost.streetcomplete.ktx.toast
 import kotlinx.coroutines.CoroutineScope
@@ -38,7 +39,9 @@ class DownloadProgressFragment : Fragment(R.layout.fragment_download_progress),
 
         override fun onStarted(item: DownloadItem) {
             startedButNoQuestsYet = false
-            launch(Dispatchers.Main) { progressView.enqueueIcon(resources.getDrawable(item.iconResId)) }
+            launch(Dispatchers.Main) {
+                progressView.enqueueIcon(requireContext().getAppCompatDrawable(questType.icon)!!)
+            }
         }
 
         override fun onFinished(item: DownloadItem) {
@@ -103,7 +106,7 @@ class DownloadProgressFragment : Fragment(R.layout.fragment_download_progress),
             showProgressView()
             val item = downloadProgressSource.currentDownloadItem
             if (item != null) {
-                progressView.setIcon(resources.getDrawable(item.iconResId))
+                progressView.setIcon(requireContext().getAppCompatDrawable(item.iconResId)!!)
             }
         } else {
             hideProgressView()

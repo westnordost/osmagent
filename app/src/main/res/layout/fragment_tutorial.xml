@@ -22,20 +22,20 @@
             android:id="@+id/mapImageView"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/logo_osm_map"
             app:layout_constraintBottom_toTopOf="@id/tutorialTextContainer"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:srcCompat="@drawable/logo_osm_map" />
 
         <ImageView
             android:id="@+id/mapLightingImageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/logo_osm_map_lighting"
-            app:layout_constraintTop_toTopOf="@id/mapImageView"
-            app:layout_constraintStart_toStartOf="@id/mapImageView"
+            app:layout_constraintBottom_toBottomOf="@id/mapImageView"
             app:layout_constraintEnd_toEndOf="@id/mapImageView"
-            app:layout_constraintBottom_toBottomOf="@id/mapImageView"/>
+            app:layout_constraintStart_toStartOf="@id/mapImageView"
+            app:layout_constraintTop_toTopOf="@id/mapImageView"
+            app:srcCompat="@drawable/logo_osm_map_lighting" />
 
         <de.westnordost.streetcomplete.location.LocationStateButton
             android:id="@+id/tutorialGpsButton"
@@ -78,7 +78,7 @@
                 android:layout_height="42dp"
                 android:layout_marginTop="7dp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_quest_recycling" />
+                app:srcCompat="@drawable/ic_quest_recycling" />
 
         </RelativeLayout>
 
@@ -108,7 +108,7 @@
                 android:layout_height="42dp"
                 android:layout_marginTop="7dp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_quest_street" />
+                app:srcCompat="@drawable/ic_quest_street" />
 
         </RelativeLayout>
 
@@ -138,7 +138,7 @@
                 android:layout_height="42dp"
                 android:layout_marginTop="7dp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_quest_traffic_lights" />
+                app:srcCompat="@drawable/ic_quest_traffic_lights" />
 
         </RelativeLayout>
 
@@ -146,12 +146,12 @@
             android:id="@+id/checkmarkView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_animated_checkmark_circle"
-            app:layout_constraintTop_toTopOf="@id/mapImageView"
-            app:layout_constraintStart_toStartOf="@id/mapImageView"
-            app:layout_constraintEnd_toEndOf="@id/mapImageView"
+            android:alpha="0"
             app:layout_constraintBottom_toBottomOf="@id/mapImageView"
-            android:alpha="0"/>
+            app:layout_constraintEnd_toEndOf="@id/mapImageView"
+            app:layout_constraintStart_toStartOf="@id/mapImageView"
+            app:layout_constraintTop_toTopOf="@id/mapImageView"
+            app:srcCompat="@drawable/ic_animated_checkmark_circle" />
 
         <FrameLayout
             android:id="@+id/tutorialTextContainer"
@@ -333,16 +333,16 @@
             android:id="@+id/magnifierImageView"
             android:layout_width="185dp"
             android:layout_height="185dp"
-            android:src="@drawable/logo_osm_magnifier"
+            android:rotation="0"
+            android:scaleX="1"
+            android:scaleY="1"
             android:transformPivotX="140dp"
             android:transformPivotY="60dp"
             android:translationX="10dp"
             android:translationY="10dp"
-            android:rotation="0"
-            android:scaleX="1"
-            android:scaleY="1"
+            app:layout_constraintBottom_toBottomOf="@id/mapImageView"
             app:layout_constraintRight_toRightOf="@id/mapImageView"
-            app:layout_constraintBottom_toBottomOf="@id/mapImageView"/>
+            app:srcCompat="@drawable/logo_osm_magnifier" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

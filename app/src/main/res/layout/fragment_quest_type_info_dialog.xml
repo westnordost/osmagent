@@ -52,7 +52,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            android:src="@drawable/ic_quest_max_height"
+            app:srcCompat="@drawable/ic_quest_max_height"
             android:scaleType="fitCenter"
             android:elevation="24dp"/>
 
@@ -90,7 +90,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_star_48dp"/>
+                    app:srcCompat="@drawable/ic_star_48dp"/>
 
                 <TextView
                     android:id="@+id/solvedQuestsText"
