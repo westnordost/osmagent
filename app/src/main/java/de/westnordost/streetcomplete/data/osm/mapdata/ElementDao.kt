@@ -41,6 +41,15 @@ class ElementDao @Inject constructor(
         relationDao.putAll(elements.filterIsInstance<Relation>())
     }
 
+    fun getAll(bbox: BoundingBox): List<Element> {
+        val nodes = nodeDao.getAll(bbox)
+        val nodeIds = nodes.map { it.id }
+        val ways = wayDao.getAllForNodes(nodeIds)
+        val wayIds = ways.map { it.id }
+        val relations = relationDao.getAllForElements(nodeIds = nodeIds, wayIds = wayIds)
+        return nodes + ways + relations
+    }
+
     fun getAll(keys: Iterable<ElementKey>): List<Element> {
         val elementIds = keys.toElementIds()
         if (elementIds.size == 0) return emptyList()

@@ -4,12 +4,10 @@ import org.junit.Before
 import org.junit.Test
 
 import de.westnordost.streetcomplete.data.osm.mapdata.ElementType.*
-import de.westnordost.streetcomplete.testutils.mock
-import de.westnordost.streetcomplete.testutils.node
-import de.westnordost.streetcomplete.testutils.way
-import de.westnordost.streetcomplete.testutils.rel
-
-import org.mockito.Mockito.*
+import de.westnordost.streetcomplete.testutils.*
+import org.junit.Assert.assertEquals
+import org.mockito.ArgumentMatchers.anyCollection
+import org.mockito.Mockito.verify
 
 class ElementDaoTest {
     private lateinit var nodeDao: NodeDao
@@ -117,5 +115,22 @@ class ElementDaoTest {
         verify(nodeDao).getAll(listOf(0L))
         verify(wayDao).getAll(listOf(0L))
         verify(relationDao).getAll(listOf(0L))
+    }
+
+    @Test fun getAllElementsByBbox() {
+        val bbox = BoundingBox(0.0,0.0,1.0,1.0)
+        val nodes = listOf(node(1), node(2), node(3))
+        val nodeIds = nodes.map { it.id }
+        val ways = listOf(way(1), way(2))
+        val wayIds = ways.map { it.id }
+        val relations = listOf(rel(1))
+
+        on(nodeDao.getAll(bbox)).thenReturn(nodes)
+        on(wayDao.getAllForNodes(eq(nodeIds))).thenReturn(ways)
+        on(relationDao.getAllForElements(nodeIds = eq(nodeIds), wayIds = wayIds)).thenReturn(relations)
+        assertEquals(
+            nodes + ways + relations,
+            dao.getAll(bbox)
+        )
     }
 }
