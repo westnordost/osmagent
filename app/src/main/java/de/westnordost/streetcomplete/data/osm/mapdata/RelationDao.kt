@@ -121,17 +121,17 @@ class RelationDao @Inject constructor(private val db: Database) {
         if (nodeIds.isNotEmpty()) {
             val nodeIdsStr = nodeIds.joinToString(",")
             val elementTypeName = ElementType.NODE.name
-            where.add("($TYPE = $elementTypeName AND $REF IN ($nodeIdsStr))")
+            where.add("($TYPE = '$elementTypeName' AND $REF IN ($nodeIdsStr))")
         }
         if (wayIds.isNotEmpty()) {
             val wayIdsStr = wayIds.joinToString(",")
             val elementTypeName = ElementType.WAY.name
-            where.add("($TYPE = $elementTypeName AND $REF IN ($wayIdsStr))")
+            where.add("($TYPE = '$elementTypeName' AND $REF IN ($wayIdsStr))")
         }
         if (relationIds.isNotEmpty()) {
             val relationIdsStr = relationIds.joinToString(",")
             val elementTypeName = ElementType.RELATION.name
-            where.add("($TYPE = $elementTypeName AND $REF IN ($relationIdsStr))")
+            where.add("($TYPE = '$elementTypeName' AND $REF IN ($relationIdsStr))")
         }
         return db.query(
             NAME_MEMBERS,

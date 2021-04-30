@@ -131,7 +131,7 @@ class RelationDaoTest : ApplicationDbTestCase() {
         )
 
         assertEquals(
-            listOf(e2, e3),
+            listOf(e1, e2, e3),
             dao.getAllForElements(
                 nodeIds = listOf(0),
                 wayIds = listOf(1),

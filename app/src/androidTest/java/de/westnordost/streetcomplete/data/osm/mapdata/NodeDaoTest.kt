@@ -76,7 +76,7 @@ class NodeDaoTest : ApplicationDbTestCase() {
             dao.getAll(bbox)
         )
         assertEquals(
-            listOf(5),
+            listOf(5L),
             dao.getAllIds(bbox)
         )
     }
