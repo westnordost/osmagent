@@ -66,12 +66,12 @@ class WayDaoTest : ApplicationDbTestCase() {
         val e3 = way(3, nodeIds = listOf(8,1654))
         dao.putAll(listOf(e1,e2,e3))
         assertEquals(
-            listOf(e1, e2).map { it.id },
-            dao.getAll(listOf(1,2,4)).sortedBy { it.id }.map { it.id }
+            listOf(e1, e2),
+            dao.getAll(listOf(1,2,4)).sortedBy { it.id }
         )
         assertEquals(
-            listOf(e1,e2,e3).map { it.nodeIds },
-            dao.getAll(listOf(1,2,3)).sortedBy { it.id }.map { it.nodeIds }
+            listOf(e1,e2,e3),
+            dao.getAll(listOf(1,2,3)).sortedBy { it.id }
         )
     }
 
@@ -83,14 +83,18 @@ class WayDaoTest : ApplicationDbTestCase() {
         assertNull(dao.get(2))
     }
 
-    @Test fun getAllForNode() {
+    @Test fun getAllForNodes() {
         val e1 = way(1, nodeIds = listOf(1,2,3))
         val e2 = way(2, nodeIds = listOf(5,1233,1))
         val e3 = way(3, nodeIds = listOf(8,1654))
         dao.putAll(listOf(e1,e2,e3))
         assertEquals(
-            listOf(e1, e2).map { it.id },
-            dao.getAllForNode(1).sortedBy { it.id }.map { it.id }
+            listOf(e1, e2),
+            dao.getAllForNode(1).sortedBy { it.id }
+        )
+        assertEquals(
+            listOf(e2, e3),
+            dao.getAllForNodes(listOf(5,8)).sortedBy { it.id }
         )
     }
 

@@ -92,11 +92,16 @@ class WayDao @Inject constructor(private val db: Database) {
         }
     }
 
-    fun getAllForNode(nodeId: Long): List<Way> {
+    fun getAllForNode(nodeId: Long): List<Way> =
+        getAllForNodes(listOf(nodeId))
+
+    fun getAllForNodes(nodeIds: Collection<Long>): List<Way> {
+        if (nodeIds.isEmpty()) return emptyList()
+        val idsString = nodeIds.joinToString(",")
         val ids = db.query(
             NAME_NODES,
             columns = arrayOf(ID),
-            where = "$NODE_ID = $nodeId"
+            where = "$NODE_ID IN ($idsString)"
         ) { it.getLong(ID) }.toSet()
         return getAll(ids)
     }

@@ -36,4 +36,8 @@ object WayTables {
     const val NODES_INDEX_CREATE = """
         CREATE INDEX osm_way_nodes_index ON $NAME_NODES (${Columns.ID});
     """
+
+    const val WAYS_BY_NODE_ID_INDEX_CREATE = """
+        CREATE INDEX osm_way_by_node_id_index ON $NAME_NODES (${Columns.NODE_ID});
+    """
 }
