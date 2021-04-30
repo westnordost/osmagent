@@ -107,7 +107,14 @@ class RelationDao @Inject constructor(private val db: Database) {
         nodeIds: Collection<Long> = emptyList(),
         wayIds: Collection<Long> = emptyList(),
         relationIds: Collection<Long> = emptyList()
-    ) : List<Relation> {
+    ) : List<Relation> =
+        getAll(getAllIdsForElements(nodeIds, wayIds, relationIds).toSet())
+
+    fun getAllIdsForElements(
+        nodeIds: Collection<Long> = emptyList(),
+        wayIds: Collection<Long> = emptyList(),
+        relationIds: Collection<Long> = emptyList()
+    ): List<Long> {
         if (nodeIds.isEmpty() && wayIds.isEmpty() && relationIds.isEmpty()) return emptyList()
 
         val where = ArrayList<String>()
@@ -126,11 +133,10 @@ class RelationDao @Inject constructor(private val db: Database) {
             val elementTypeName = ElementType.RELATION.name
             where.add("($TYPE = $elementTypeName AND $REF IN ($relationIdsStr))")
         }
-        val ids = db.query(
+        return db.query(
             NAME_MEMBERS,
             columns = arrayOf(ID),
-            where = where.joinToString(" OR ")) { it.getLong(ID) }.toSet()
-        return getAll(ids)
+            where = where.joinToString(" OR ")) { it.getLong(ID) }
     }
 
     fun getAllForNode(nodeId: Long) : List<Relation> =

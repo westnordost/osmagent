@@ -127,9 +127,26 @@ class ElementDaoTest {
 
         on(nodeDao.getAll(bbox)).thenReturn(nodes)
         on(wayDao.getAllForNodes(eq(nodeIds))).thenReturn(ways)
-        on(relationDao.getAllForElements(nodeIds = eq(nodeIds), wayIds = wayIds)).thenReturn(relations)
+        on(relationDao.getAllForElements(nodeIds = eq(nodeIds), wayIds = eq(wayIds))).thenReturn(relations)
         assertEquals(
             nodes + ways + relations,
+            dao.getAll(bbox)
+        )
+    }
+
+    @Test fun getAllElementKeysByBbox() {
+        val bbox = BoundingBox(0.0,0.0,1.0,1.0)
+        val nodeIds = listOf<Long>(1,2,3)
+        val wayIds = listOf<Long>(1,2)
+        val relationIds = listOf<Long>(1)
+
+        on(nodeDao.getAllIds(bbox)).thenReturn(nodeIds)
+        on(wayDao.getAllIdsForNodes(eq(nodeIds))).thenReturn(wayIds)
+        on(relationDao.getAllIdsForElements(nodeIds = eq(nodeIds), wayIds = eq(wayIds))).thenReturn(relationIds)
+        assertEquals(
+            nodeIds.map { ElementKey(NODE, it) } +
+                wayIds.map { ElementKey(WAY, it) } +
+                relationIds.map { ElementKey(RELATION, it) },
             dao.getAll(bbox)
         )
     }
