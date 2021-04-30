@@ -54,6 +54,7 @@ import de.westnordost.streetcomplete.quests.oneway_suspects.data.WayTrafficFlowT
         db.execSQL(RelationTables.CREATE)
         db.execSQL(RelationTables.MEMBERS_CREATE)
         db.execSQL(RelationTables.MEMBERS_INDEX_CREATE)
+        db.execSQL(RelationTables.MEMBERS_BY_ELEMENT_INDEX_CREATE)
 
         // changes made on OSM map data
         db.execSQL(ElementEditsTable.CREATE)

@@ -89,12 +89,12 @@ class RelationDaoTest : ApplicationDbTestCase() {
         ))
         dao.putAll(listOf(e1,e2,e3))
         assertEquals(
-            listOf(e1, e2).map { it.id },
-            dao.getAll(listOf(1,2,4)).sortedBy { it.id }.map { it.id }
+            listOf(e1, e2),
+            dao.getAll(listOf(1,2,4)).sortedBy { it.id }
         )
         assertEquals(
-            listOf(e1, e2, e3).map { it.members },
-            dao.getAll(listOf(1,2,3)).sortedBy { it.id }.map { it.members }
+            listOf(e1, e2, e3),
+            dao.getAll(listOf(1,2,3)).sortedBy { it.id }
         )
     }
 
@@ -118,16 +118,25 @@ class RelationDaoTest : ApplicationDbTestCase() {
         ))
         dao.putAll(listOf(e1,e2,e3))
         assertEquals(
-            listOf(e1, e2).map { it.id },
-            dao.getAllForNode(0).sortedBy { it.id }.map { it.id }
+            listOf(e1, e2),
+            dao.getAllForNode(0).sortedBy { it.id }
         )
         assertEquals(
-            listOf(e3).map { it.id },
-            dao.getAllForWay(4).sortedBy { it.id }.map { it.id }
+            listOf(e3),
+            dao.getAllForWay(4).sortedBy { it.id }
         )
         assertEquals(
-            listOf(e3).map { it.id },
-            dao.getAllForRelation(3).sortedBy { it.id }.map { it.id }
+            listOf(e3),
+            dao.getAllForRelation(3).sortedBy { it.id }
+        )
+
+        assertEquals(
+            listOf(e2, e3),
+            dao.getAllForElements(
+                nodeIds = listOf(0),
+                wayIds = listOf(1),
+                relationIds = listOf(3)
+            ).sortedBy { it.id }
         )
     }
 

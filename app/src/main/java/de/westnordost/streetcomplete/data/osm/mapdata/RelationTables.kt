@@ -40,4 +40,8 @@ object RelationTables {
     const val MEMBERS_INDEX_CREATE = """
         CREATE INDEX osm_relation_members_index ON $NAME_MEMBERS (${Columns.ID});
     """
+
+    const val MEMBERS_BY_ELEMENT_INDEX_CREATE = """
+        CREATE INDEX osm_relation_members_by_element_index ON $NAME_MEMBERS (${Columns.TYPE}, ${Columns.REF});
+    """
 }
