@@ -1,5 +1,6 @@
 package de.westnordost.streetcomplete.data.osm.mapdata
 
+import de.westnordost.streetcomplete.data.CursorPosition
 import javax.inject.Inject
 
 import de.westnordost.streetcomplete.data.Database
@@ -52,16 +53,14 @@ class NodeDao @Inject constructor(private val db: Database) {
     fun getAll(ids: Collection<Long>): List<Node> {
         if (ids.isEmpty()) return emptyList()
         val idsString = ids.joinToString(",")
-        return db.query(NAME, where = "$ID IN ($idsString)") { cursor ->
-            Node(
-                cursor.getLong(ID),
-                LatLon(cursor.getDouble(LATITUDE), cursor.getDouble(LONGITUDE)),
-                cursor.getStringOrNull(TAGS)?.let { Json.decodeFromString(it) } ?: emptyMap(),
-                cursor.getInt(VERSION),
-                cursor.getLong(TIMESTAMP)
-            )
-        }
+        return db.query(NAME, where = "$ID IN ($idsString)") { it.toNode() }
     }
+
+    fun getAll(bbox: BoundingBox): List<Node> =
+        db.query(NAME, where = inBoundsSql(bbox)) { it.toNode() }
+
+    fun getAllIds(bbox: BoundingBox): List<Long> =
+        db.query(NAME, columns = arrayOf(ID), where = inBoundsSql(bbox)) { it.getLong(ID) }
 
     fun deleteAll(ids: Collection<Long>): Int {
         if (ids.isEmpty()) return 0
@@ -71,4 +70,17 @@ class NodeDao @Inject constructor(private val db: Database) {
 
     fun getIdsOlderThan(timestamp: Long): List<Long> =
         db.query(NAME, columns = arrayOf(ID), where = "$LAST_SYNC < $timestamp") { it.getLong(ID) }
+
+    private fun CursorPosition.toNode() = Node(
+        getLong(ID),
+        LatLon(getDouble(LATITUDE), getDouble(LONGITUDE)),
+        getStringOrNull(TAGS)?.let { Json.decodeFromString(it) } ?: emptyMap(),
+        getInt(VERSION),
+        getLong(TIMESTAMP)
+    )
+
+    private fun inBoundsSql(bbox: BoundingBox): String = """
+        ($LATITUDE BETWEEN ${bbox.min.latitude} AND ${bbox.max.latitude}) AND
+        ($LONGITUDE BETWEEN ${bbox.min.longitude} AND ${bbox.max.longitude})
+    """.trimIndent()
 }

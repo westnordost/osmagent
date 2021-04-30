@@ -23,4 +23,11 @@ object NodeTable {
             ${Columns.TIMESTAMP} int NOT NULL,
             ${Columns.LAST_SYNC} int NOT NULL
         );"""
+
+    const val SPATIAL_INDEX_CREATE = """
+        CREATE INDEX osm_nodes_spatial_index ON $NAME (
+            ${Columns.LATITUDE},
+            ${Columns.LONGITUDE}
+        );
+    """
 }

@@ -60,7 +60,25 @@ class NodeDaoTest : ApplicationDbTestCase() {
         val e2 = nd(2)
         val e3 = nd(3)
         dao.putAll(listOf(e1,e2,e3))
-        assertEquals(listOf(e1, e2).map { it.id }, dao.getAll(listOf(1,2,4)).map { it.id })
+        assertEquals(listOf(e1, e2), dao.getAll(listOf(1,2,4)))
+    }
+
+    @Test fun getAllByBbox() {
+        val e1 = nd(1, lat = 0.5, lon = -0.5)
+        val e2 = nd(2, lat = -0.5, lon = 0.5)
+        val e3 = nd(3, lat = 1.5, lon = 0.5)
+        val e4 = nd(4, lat = 0.5, lon = 1.5)
+        val e5 = nd(5, lat = 0.5, lon = 0.5)
+        val bbox = BoundingBox(0.0, 0.0, 1.0, 1.0)
+        dao.putAll(listOf(e1,e2,e3,e4,e5))
+        assertEquals(
+            listOf(e5),
+            dao.getAll(bbox)
+        )
+        assertEquals(
+            listOf(5),
+            dao.getAllIds(bbox)
+        )
     }
 
     @Test fun deleteAll() {
