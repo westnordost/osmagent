@@ -41,7 +41,6 @@ import de.westnordost.streetcomplete.quests.oneway_suspects.data.WayTrafficFlowT
 
         // OSM map data
         db.execSQL(ElementGeometryTable.CREATE)
-        db.execSQL(ElementGeometryTable.SPATIAL_INDEX_CREATE)
 
         db.execSQL(NodeTable.CREATE)
         db.execSQL(NodeTable.SPATIAL_INDEX_CREATE)

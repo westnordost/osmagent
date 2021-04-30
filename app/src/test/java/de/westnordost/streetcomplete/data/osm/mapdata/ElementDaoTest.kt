@@ -127,7 +127,11 @@ class ElementDaoTest {
 
         on(nodeDao.getAll(bbox)).thenReturn(nodes)
         on(wayDao.getAllForNodes(eq(nodeIds))).thenReturn(ways)
-        on(relationDao.getAllForElements(nodeIds = eq(nodeIds), wayIds = eq(wayIds))).thenReturn(relations)
+        on(relationDao.getAllForElements(
+            nodeIds = eq(nodeIds),
+            wayIds = eq(wayIds),
+            relationIds = eq(emptyList())
+        )).thenReturn(relations)
         assertEquals(
             nodes + ways + relations,
             dao.getAll(bbox)
@@ -142,12 +146,16 @@ class ElementDaoTest {
 
         on(nodeDao.getAllIds(bbox)).thenReturn(nodeIds)
         on(wayDao.getAllIdsForNodes(eq(nodeIds))).thenReturn(wayIds)
-        on(relationDao.getAllIdsForElements(nodeIds = eq(nodeIds), wayIds = eq(wayIds))).thenReturn(relationIds)
+        on(relationDao.getAllIdsForElements(
+            nodeIds = eq(nodeIds),
+            wayIds = eq(wayIds),
+            relationIds = eq(emptyList())
+        )).thenReturn(relationIds)
         assertEquals(
             nodeIds.map { ElementKey(NODE, it) } +
                 wayIds.map { ElementKey(WAY, it) } +
                 relationIds.map { ElementKey(RELATION, it) },
-            dao.getAll(bbox)
+            dao.getAllKeys(bbox)
         )
     }
 }

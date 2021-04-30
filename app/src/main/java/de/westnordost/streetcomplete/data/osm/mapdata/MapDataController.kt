@@ -46,8 +46,7 @@ import javax.inject.Singleton
             geometry?.let { ElementGeometryEntry(element.type, element.id, it) }
         }
 
-
-        val oldElementKeys = geometryDB.getAllKeys(mapData.boundingBox!!).toMutableSet()
+        val oldElementKeys = elementDB.getAllKeys(mapData.boundingBox!!).toMutableSet()
         for (element in mapData) {
             oldElementKeys.remove(ElementKey(element.type, element.id))
         }
@@ -128,12 +127,12 @@ import javax.inject.Singleton
 
     fun getMapDataWithGeometry(bbox: BoundingBox): MutableMapDataWithGeometry {
         val time = currentTimeMillis()
-        val elementGeometryEntries = geometryDB.getAllEntries(bbox)
-        val elementKeys = elementGeometryEntries.map { ElementKey(it.elementType, it.elementId) }
-        val elements = elementDB.getAll(elementKeys)
+        val elements = elementDB.getAll(bbox)
+        // todo not really necessary to fetch all geometry here...
+        val elementGeometryEntries = geometryDB.getAllEntries(elements.map { ElementKey(it.type, it.id) })
         val result = MutableMapDataWithGeometry(elements, elementGeometryEntries)
         result.boundingBox = bbox
-        Log.i(TAG, "Fetched ${elementKeys.size} elements and geometries in ${currentTimeMillis() - time}ms")
+        Log.i(TAG, "Fetched ${elements.size} elements and geometries in ${currentTimeMillis() - time}ms")
         return result
     }
 

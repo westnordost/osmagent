@@ -68,8 +68,8 @@ class MapDataControllerTest {
             ElementKey(NODE, 2L),
         )
         val elements = listOf(node(1), node(2))
-        on(geometryDB.getAllEntries(bbox)).thenReturn(geomEntries)
-        on(elementDB.getAll(eq(elementKeys))).thenReturn(elements)
+        on(elementDB.getAll(bbox)).thenReturn(elements)
+        on(geometryDB.getAllEntries(elementKeys)).thenReturn(geomEntries)
 
         val mapData = controller.getMapDataWithGeometry(bbox)
         assertTrue(mapData.nodes.containsExactlyInAnyOrder(elements))
@@ -144,8 +144,7 @@ class MapDataControllerTest {
         mapData.nodeGeometriesById[1] = geomEntries[0].geometry as ElementPointGeometry
         mapData.nodeGeometriesById[2] = geomEntries[1].geometry as ElementPointGeometry
 
-        on(geometryDB.getAllKeys(bbox)).thenReturn(emptyList())
-        on(geometryDB.getAllEntries(bbox)).thenReturn(emptyList())
+        on(elementDB.getAllKeys(bbox)).thenReturn(emptyList())
         on(geometryCreator.create(any(), any(), anyBoolean())).thenReturn(pGeom())
 
         val listener = mock<MapDataController.Listener>()

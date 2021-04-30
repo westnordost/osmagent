@@ -10,16 +10,11 @@ import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.Colu
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.Columns.GEOMETRY_POLYLINES
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.Columns.CENTER_LATITUDE
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.Columns.CENTER_LONGITUDE
-import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.Columns.MAX_LATITUDE
-import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.Columns.MAX_LONGITUDE
-import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.Columns.MIN_LATITUDE
-import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.Columns.MIN_LONGITUDE
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.NAME
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.NAME_TEMPORARY_LOOKUP
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.NAME_TEMPORARY_LOOKUP_MERGED_VIEW
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.TEMPORARY_LOOKUP_CREATE
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometryTable.TEMPORARY_LOOKUP_MERGED_VIEW_CREATE
-import de.westnordost.streetcomplete.data.osm.mapdata.BoundingBox
 import de.westnordost.streetcomplete.data.osm.mapdata.ElementKey
 import de.westnordost.streetcomplete.data.osm.mapdata.ElementType
 import de.westnordost.streetcomplete.data.osm.mapdata.LatLon
@@ -55,11 +50,7 @@ class ElementGeometryDao @Inject constructor(
                 CENTER_LATITUDE,
                 CENTER_LONGITUDE,
                 GEOMETRY_POLYGONS,
-                GEOMETRY_POLYLINES,
-                MIN_LATITUDE,
-                MIN_LONGITUDE,
-                MAX_LATITUDE,
-                MAX_LONGITUDE
+                GEOMETRY_POLYLINES
             ),
             entries.map {
                 val bbox = it.geometry.getBounds()
@@ -70,23 +61,10 @@ class ElementGeometryDao @Inject constructor(
                     g.center.latitude,
                     g.center.longitude,
                     if (g is ElementPolygonsGeometry) polylinesSerializer.serialize(g.polygons) else null,
-                    if (g is ElementPolylinesGeometry) polylinesSerializer.serialize(g.polylines) else null,
-                    bbox.min.latitude,
-                    bbox.min.longitude,
-                    bbox.max.latitude,
-                    bbox.max.longitude
+                    if (g is ElementPolylinesGeometry) polylinesSerializer.serialize(g.polylines) else null
             ) }
         )
     }
-
-    fun getAllKeys(bbox: BoundingBox): List<ElementKey> =
-        db.query(NAME,
-            columns = arrayOf(ELEMENT_TYPE, ELEMENT_ID),
-            where = inBoundsSql(bbox)
-        ) { it.toElementKey() }
-
-    fun getAllEntries(bbox: BoundingBox): List<ElementGeometryEntry> =
-        db.query(NAME, where = inBoundsSql(bbox)) { it.toElementGeometryEntry() }
 
     fun getAllEntries(keys: Collection<ElementKey>): List<ElementGeometryEntry> {
         if (keys.isEmpty()) return emptyList()
@@ -136,10 +114,6 @@ class ElementGeometryDao @Inject constructor(
         CENTER_LONGITUDE to center.longitude,
         GEOMETRY_POLYGONS to if (this is ElementPolygonsGeometry) polylinesSerializer.serialize(polygons) else null,
         GEOMETRY_POLYLINES to if (this is ElementPolylinesGeometry) polylinesSerializer.serialize(polylines) else null,
-        MIN_LATITUDE to getBounds().min.latitude,
-        MIN_LONGITUDE to getBounds().min.longitude,
-        MAX_LATITUDE to getBounds().max.latitude,
-        MAX_LONGITUDE to getBounds().max.longitude
     )
 
     private fun CursorPosition.toElementGeometry(): ElementGeometry {
@@ -154,13 +128,6 @@ class ElementGeometryDao @Inject constructor(
         }
     }
 }
-
-private fun inBoundsSql(bbox: BoundingBox) = """
-    $MIN_LATITUDE <= ${bbox.max.latitude} AND
-    $MAX_LATITUDE >= ${bbox.min.latitude} AND
-    $MIN_LONGITUDE <= ${bbox.max.longitude} AND
-    $MAX_LONGITUDE >= ${bbox.min.longitude}
-""".trimIndent()
 
 private fun CursorPosition.toElementKey() = ElementKey(
     ElementType.valueOf(getString(ELEMENT_TYPE)),
