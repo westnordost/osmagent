@@ -17,9 +17,7 @@ import de.westnordost.streetcomplete.data.upload.UploadProgressListener
 import de.westnordost.streetcomplete.data.user.UserController
 import de.westnordost.streetcomplete.ktx.toast
 import de.westnordost.streetcomplete.view.dialogs.RequestLoginDialog
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /** Fragment that shows the upload button, including upload progress etc. */
@@ -30,7 +28,7 @@ class UploadButtonFragment : Fragment(R.layout.fragment_upload_button) {
     @Inject internal lateinit var unsyncedChangesCountSource: UnsyncedChangesCountSource
     @Inject internal lateinit var prefs: SharedPreferences
 
-    private val uploadButton get() = view as UploadButton
+    private val uploadButton get() = view as? UploadButton
 
     private val unsyncedChangesCountListener = object : UnsyncedChangesCountSource.Listener {
         override fun onIncreased() { lifecycleScope.launch { updateCount() }}
@@ -51,7 +49,7 @@ class UploadButtonFragment : Fragment(R.layout.fragment_upload_button) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        uploadButton.setOnClickListener {
+        uploadButton?.setOnClickListener {
             if (isConnected()) {
                 uploadChanges()
             } else {
@@ -63,13 +61,11 @@ class UploadButtonFragment : Fragment(R.layout.fragment_upload_button) {
     override fun onStart() {
         super.onStart()
         /* Only show the button if autosync is off */
-        uploadButton.isGone = isAutosync
+        uploadButton?.isGone = isAutosync
         if (!isAutosync) {
-            lifecycleScope.launch {
-                updateCount()
-                unsyncedChangesCountSource.addListener(unsyncedChangesCountListener)
-            }
+            lifecycleScope.launch { updateCount() }
             updateProgress(uploadController.isUploadInProgress)
+            unsyncedChangesCountSource.addListener(unsyncedChangesCountListener)
             uploadController.addUploadProgressListener(uploadProgressListener)
         }
     }
@@ -86,16 +82,16 @@ class UploadButtonFragment : Fragment(R.layout.fragment_upload_button) {
         Prefs.Autosync.valueOf(prefs.getString(Prefs.AUTOSYNC, "ON")!!) == Prefs.Autosync.ON
 
     private suspend fun updateCount() {
-        uploadButton.uploadableCount = unsyncedChangesCountSource.getCount()
+        uploadButton?.uploadableCount = unsyncedChangesCountSource.getCount()
     }
 
     private fun updateProgress(isUploadInProgress: Boolean) {
         if (isUploadInProgress) {
-            uploadButton.isEnabled = false
-            uploadButton.showProgress = true
+            uploadButton?.isEnabled = false
+            uploadButton?.showProgress = true
         } else {
-            uploadButton.isEnabled = true
-            uploadButton.showProgress = false
+            uploadButton?.isEnabled = true
+            uploadButton?.showProgress = false
         }
     }
 
