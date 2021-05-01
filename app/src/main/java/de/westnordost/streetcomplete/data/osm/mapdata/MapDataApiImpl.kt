@@ -33,10 +33,11 @@ class MapDataApiImpl(osm: OsmConnection) : MapDataApi {
 
     override fun closeChangeset(changesetId: Long) = api.closeChangeset(changesetId)
 
-    override fun getMap(bounds: BoundingBox, mutableMapData: MutableMapData) = api.getMap(
-        OsmApiBoundingBox(bounds.min.latitude, bounds.min.longitude, bounds.max.latitude, bounds.max.longitude),
-        MapDataApiHandler(mutableMapData)
-    )
+    override fun getMap(bounds: BoundingBox, mutableMapData: MutableMapData, ignoreRelationTypes: Set<String?>) =
+        api.getMap(
+            bounds.toOsmApiBoundingBox(),
+            MapDataApiHandler(mutableMapData, ignoreRelationTypes)
+        )
 
     override fun getWayComplete(id: Long): MapData? =
         try {
@@ -127,6 +128,9 @@ private fun ElementType.toOsmElementType(): OsmApiElement.Type = when(this) {
     ElementType.RELATION    -> OsmApiElement.Type.RELATION
 }
 
+private fun BoundingBox.toOsmApiBoundingBox() =
+    OsmApiBoundingBox(min.latitude, min.longitude, max.latitude, max.longitude)
+
 /* --------------------------------- OsmApiElement -> Element ----------------------------------- */
 
 private fun OsmApiNode.toNode() =
@@ -159,18 +163,32 @@ private fun OsmApiDiffElement.toDiffElement() = DiffElement(
     serverVersion
 )
 
+private fun OsmApiBoundingBox.toBoundingBox() =
+    BoundingBox(minLatitude, minLongitude, maxLatitude, maxLongitude)
+
 /* ---------------------------------------------------------------------------------------------- */
 
-private class MapDataApiHandler(val data: MutableMapData) : MapDataHandler {
+private class MapDataApiHandler(
+    val data: MutableMapData,
+    val ignoreRelationTypes: Set<String?> = emptySet()
+) : MapDataHandler {
+
     override fun handle(bounds: OsmApiBoundingBox) {
-        data.boundingBox = BoundingBox(
-            bounds.minLatitude,
-            bounds.minLongitude,
-            bounds.maxLatitude,
-            bounds.maxLongitude
-        )
+        data.boundingBox = bounds.toBoundingBox()
     }
-    override fun handle(node: OsmApiNode) { data.add(node.toNode()) }
-    override fun handle(way: OsmApiWay) { data.add(way.toWay()) }
-    override fun handle(relation: OsmApiRelation) { data.add(relation.toRelation()) }
+
+    override fun handle(node: OsmApiNode) {
+        data.add(node.toNode())
+    }
+
+    override fun handle(way: OsmApiWay) {
+        data.add(way.toWay())
+    }
+
+    override fun handle(relation: OsmApiRelation) {
+        val relationType = relation.tags?.get("type")
+        if (relationType !in ignoreRelationTypes) {
+            data.add(relation.toRelation())
+        }
+    }
 }

@@ -42,16 +42,20 @@ v32.0-alpha1: |
   <h3>Other Enhancements</h3>
   <ul>
   <li>Enable answering that the cycleway is displayed separately on the map (#2525, #2665)</li>
-  <li>Some wording improvements (#2728), by @matkoniecz, (#2685)</li>
-  <li>Enhance maxspeed collection for the United Kingdom (#2745, #2748), by @arrival-spring</li>
+  <li>Some wording improvements (#2728), by @matkoniecz, (#2806, #2814) by @peternewman, (#2685)</li>
+  <li>Enhance maxspeed collection for the United Kingdom (#2745, #2748, #2750, #2811), by @arrival-spring</li>
   <li>Periodically ask for the existence of bbq spots, ticket validators, emergency life rings and emergency phones (#2679), thanks @arrival-spring</li>
   <li>Also ask for the surface of service roads as long as they are not driveways (#2783)</li>
+  <li>Slightly more performant compass</li>
   </ul>
   <h3>Fixes</h3>
   <ul>
   <li>On tablets, correctly restore the position when reentering the app (#2659, #2311), thanks @matteblair</li>
-  <li>Sometimes the link collection wouldn't show (#2801, #2809) by @tapetis</li>
+  <li>Sometimes the link collection wouldn't show (#2801, #2809), by @tapetis</li>
+  <li>The keyboard would not appear in the opening hours times dialog (#2799, #2820), by @tapetis</li>
+  <li>The flags in the statics view were sometimes wrongly stretched (#2819, #2831), by @tapetis </li>
   <li>The time picker for the postbox collection times now follows the system settings (#2807)</li>
+  <li>Fix crash on trying to display opening hours that range to 24:00 (#2830)</li>
   <li>...and other fixes and enhancements (#2521, #1821, #2628, #2691, #2715, #2728...)</li>
   <li>Remove checking existence of grit bins, as many are removed for summer and not marked as seasonal :( (#2726), by @matkoniecz</li>
   </ul>

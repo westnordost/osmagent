@@ -56,13 +56,14 @@ interface MapDataApi : MapDataRepository {
      * @param bounds rectangle in which to query map data. May not cross the 180th meridian. This is
      * usually limited at 0.25 square degrees. Check the server capabilities.
      * @param mutableMapData mutable map data to add the add the data to
+     * @param ignoreRelationTypes don't put any relations of the given types in the given mutableMapData
      *
      * @throws OsmQueryTooBigException if the bounds are is too large
      * @throws IllegalArgumentException if the bounds cross the 180th meridian.
      *
      * @return the map data
      */
-    fun getMap(bounds: BoundingBox, mutableMapData: MutableMapData)
+    fun getMap(bounds: BoundingBox, mutableMapData: MutableMapData, ignoreRelationTypes: Set<String?> = emptySet())
 
     /**
      * Queries the way with the given id plus all nodes that are in referenced by it.

@@ -51,6 +51,7 @@ class CircularFlagView @JvmOverloads constructor(
             if (widthMode == MeasureSpec.EXACTLY) width else height
         } else min(width, height)
         setMeasuredDimension(size, size)
+        boundsOffset = null
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

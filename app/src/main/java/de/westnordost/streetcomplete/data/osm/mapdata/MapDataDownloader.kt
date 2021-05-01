@@ -33,7 +33,7 @@ class MapDataDownloader @Inject constructor(
 
     private fun getMapAndHandleTooBigQuery(bounds: BoundingBox, mutableMapData: MutableMapData) {
         try {
-            mapDataApi.getMap(bounds, mutableMapData)
+            mapDataApi.getMap(bounds, mutableMapData, ApplicationConstants.IGNORED_RELATION_TYPES)
         } catch (e : OsmQueryTooBigException) {
             for (subBounds in bounds.splitIntoFour()) {
                 getMapAndHandleTooBigQuery(subBounds, mutableMapData)

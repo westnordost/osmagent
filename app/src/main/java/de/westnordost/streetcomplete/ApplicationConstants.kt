@@ -42,4 +42,17 @@ object ApplicationConstants {
     const val ATTACH_PHOTO_MAXHEIGHT = 1280 // WXGA
 
     const val NOTIFICATIONS_CHANNEL_DOWNLOAD = "downloading"
+
+    val IGNORED_RELATION_TYPES = setOf(
+        // could be useful, but sometimes/often very very large
+        "route", "route_master", "superroute", "network", "disused:route",
+        // very large, not useful for SC
+        "boundary",
+        // can easily span very large areas, not useful for SC
+        "water", "waterway", "watershed", "collection",
+        // questionable relation type: members could easily span multiple continents
+        "person",
+        // no wiki entry, sounds like it could span large areas
+        "power", "pipeline", "railway"
+    )
 }
