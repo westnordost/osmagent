@@ -1,7 +1,3 @@
 package de.westnordost.streetcomplete.data.quest
 
-sealed class DayNightCycle
-
-object DayAndNight : DayNightCycle()
-object OnlyDay : DayNightCycle()
-object OnlyNight : DayNightCycle()
+enum class DayNightCycle { DAY_AND_NIGHT, ONLY_DAY, ONLY_NIGHT }
