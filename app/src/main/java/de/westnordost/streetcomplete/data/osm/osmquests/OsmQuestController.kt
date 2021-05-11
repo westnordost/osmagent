@@ -11,6 +11,9 @@ import de.westnordost.streetcomplete.data.osm.geometry.ElementPolylinesGeometry
 import de.westnordost.streetcomplete.data.osm.mapdata.*
 import de.westnordost.streetcomplete.data.osmnotes.Note
 import de.westnordost.streetcomplete.data.osmnotes.edits.NotesWithEditsSource
+import de.westnordost.streetcomplete.data.quest.DayAndNight
+import de.westnordost.streetcomplete.data.quest.OnlyDay
+import de.westnordost.streetcomplete.data.quest.OnlyNight
 import de.westnordost.streetcomplete.data.quest.OsmQuestKey
 import de.westnordost.streetcomplete.data.quest.QuestTypeRegistry
 import de.westnordost.streetcomplete.ktx.format
@@ -18,6 +21,7 @@ import de.westnordost.streetcomplete.util.contains
 import de.westnordost.streetcomplete.util.enclosingBoundingBox
 import de.westnordost.streetcomplete.util.enlargedBy
 import de.westnordost.streetcomplete.util.measuredLength
+import de.westnordost.streetcomplete.util.isNight
 import kotlinx.coroutines.*
 import java.lang.System.currentTimeMillis
 import java.util.concurrent.CopyOnWriteArrayList
@@ -221,6 +225,15 @@ import javax.inject.Singleton
         // do not create quests in countries where the quest is not activated
         val countries = questType.enabledInCountries
         if (!countryBoundariesFuture.get().isInAny(pos, countries))  return false
+
+        // do not create quests outside of hours specified
+        val dayNightCycle = questType.dayNightCycle
+        if (!when (dayNightCycle) {
+                is DayAndNight -> true
+                is OnlyDay -> !isNight(pos)
+                is OnlyNight -> isNight(pos)
+            }
+        ) return false
 
         // do not create quests that refer to geometry that is too long for a surveyor to be expected to survey
         if (geometry is ElementPolylinesGeometry) {
