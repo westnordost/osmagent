@@ -30,6 +30,9 @@
     <string name="pref_title_show_notes_not_phrased_as_questions">"Show all notes"</string>
     <string name="pref_summaryOn_show_notes_not_phrased_as_questions">"Also showing notes not phrased as questions"</string>
     <string name="pref_summaryOff_show_notes_not_phrased_as_questions">"Ignoring notes not phrased as questions"</string>
+    <string name="pref_title_show_time_dependent">"Don't restrict quests by time"</string>
+    <string name="pref_summaryOn_show_time_dependent">"Not restricting quests by time"</string>
+    <string name="pref_summaryOff_show_time_dependent">"Some quests will only show at certain times"</string>
     <string name="pref_title_map_cache">"Map cache size"</string>
     <string name="map_btn_gps_tracking">"Follow me"</string>
     <string name="map_attribution_osm">"© OpenStreetMap contributors"</string>

@@ -1,10 +1,12 @@
 package de.westnordost.streetcomplete.data.osm.osmquests
 
+import android.content.SharedPreferences
 import android.util.Log
 import de.westnordost.countryboundaries.CountryBoundaries
 import de.westnordost.countryboundaries.intersects
 import de.westnordost.countryboundaries.isInAny
 import de.westnordost.streetcomplete.ApplicationConstants
+import de.westnordost.streetcomplete.Prefs
 import de.westnordost.streetcomplete.data.osm.edits.MapDataWithEditsSource
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometry
 import de.westnordost.streetcomplete.data.osm.geometry.ElementPolylinesGeometry
@@ -37,7 +39,8 @@ import javax.inject.Singleton
     private val mapDataSource: MapDataWithEditsSource,
     private val notesSource: NotesWithEditsSource,
     private val questTypeRegistry: QuestTypeRegistry,
-    private val countryBoundariesFuture: FutureTask<CountryBoundaries>
+    private val countryBoundariesFuture: FutureTask<CountryBoundaries>,
+    private val prefs: SharedPreferences
 ): OsmQuestSource {
 
     /* Must be a singleton because there is a listener that should respond to a change in the
@@ -228,12 +231,15 @@ import javax.inject.Singleton
 
         // do not create quests outside of hours specified
         val dayNightCycle = questType.dayNightCycle
-        if (!when (dayNightCycle) {
-                is DayAndNight -> true
-                is OnlyDay -> !isNight(pos)
-                is OnlyNight -> isNight(pos)
-            }
-        ) return false
+
+        if (!prefs.getBoolean(Prefs.ALWAYS_SHOW_TIME_DEPENDENT, false)) {
+            if (!when (dayNightCycle) {
+                    is DayAndNight -> true
+                    is OnlyDay -> !isNight(pos)
+                    is OnlyNight -> isNight(pos)
+                }
+            ) return false
+        }
 
         // do not create quests that refer to geometry that is too long for a surveyor to be expected to survey
         if (geometry is ElementPolylinesGeometry) {

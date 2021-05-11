@@ -51,6 +51,14 @@
             android:persistent="true"
             />
 
+        <SwitchPreference
+            android:key="quests.showTimeDependent"
+            android:title="@string/pref_title_show_time_dependent"
+            android:summaryOn="@string/pref_summaryOn_show_time_dependent"
+            android:summaryOff="@string/pref_summaryOff_show_time_dependent"
+            android:persistent="true"
+            />
+
         <ListPreference
             android:key="theme.select"
             android:title="@string/pref_title_theme_select"
