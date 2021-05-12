@@ -11,7 +11,6 @@ object Prefs {
     const val SHOW_NOTES_NOT_PHRASED_AS_QUESTIONS = "display.nonQuestionNotes"
     const val AUTOSYNC = "autosync"
     const val KEEP_SCREEN_ON = "display.keepScreenOn"
-    const val ALWAYS_SHOW_TIME_DEPENDENT = "quests.showTimeDependent"
     const val UNGLUE_HINT_TIMES_SHOWN = "unglueHint.shown"
     const val THEME_SELECT = "theme.select"
     const val THEME_BACKGROUND = "theme.background_type"
