@@ -1,14 +1,12 @@
 package de.westnordost.streetcomplete.data.osm.osmquests
 
-import de.westnordost.streetcomplete.data.osm.mapdata.MapDataWithGeometry
-import de.westnordost.streetcomplete.data.quest.QuestType
-import de.westnordost.streetcomplete.data.quest.AllCountries
-import de.westnordost.streetcomplete.data.quest.Countries
-import de.westnordost.streetcomplete.data.quest.DayAndNight
-import de.westnordost.streetcomplete.data.quest.DayNightCycle
-import de.westnordost.streetcomplete.ktx.arrayOfNotNull
 import de.westnordost.streetcomplete.data.osm.edits.update_tags.StringMapChangesBuilder
 import de.westnordost.streetcomplete.data.osm.mapdata.Element
+import de.westnordost.streetcomplete.data.osm.mapdata.MapDataWithGeometry
+import de.westnordost.streetcomplete.data.quest.AllCountries
+import de.westnordost.streetcomplete.data.quest.Countries
+import de.westnordost.streetcomplete.data.quest.QuestType
+import de.westnordost.streetcomplete.ktx.arrayOfNotNull
 
 /** Quest type where each quest refers to an OSM element */
 interface OsmElementQuestType<T> : QuestType<T> {
@@ -24,9 +22,6 @@ interface OsmElementQuestType<T> : QuestType<T> {
 
     /** in which countries the quest should be shown */
     val enabledInCountries: Countries get() = AllCountries
-
-    /** if the quest should only be shown during day-light os night-time hours */
-    val dayNightCycle: DayNightCycle get() = DayAndNight
 
     /** returns whether the markers should be at the ends instead of the center */
     val hasMarkersAtEnds: Boolean get() = false

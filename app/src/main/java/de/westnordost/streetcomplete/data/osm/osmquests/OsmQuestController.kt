@@ -1,21 +1,16 @@
 package de.westnordost.streetcomplete.data.osm.osmquests
 
-import android.content.SharedPreferences
 import android.util.Log
 import de.westnordost.countryboundaries.CountryBoundaries
 import de.westnordost.countryboundaries.intersects
 import de.westnordost.countryboundaries.isInAny
 import de.westnordost.streetcomplete.ApplicationConstants
-import de.westnordost.streetcomplete.Prefs
 import de.westnordost.streetcomplete.data.osm.edits.MapDataWithEditsSource
 import de.westnordost.streetcomplete.data.osm.geometry.ElementGeometry
 import de.westnordost.streetcomplete.data.osm.geometry.ElementPolylinesGeometry
 import de.westnordost.streetcomplete.data.osm.mapdata.*
 import de.westnordost.streetcomplete.data.osmnotes.Note
 import de.westnordost.streetcomplete.data.osmnotes.edits.NotesWithEditsSource
-import de.westnordost.streetcomplete.data.quest.DayAndNight
-import de.westnordost.streetcomplete.data.quest.OnlyDay
-import de.westnordost.streetcomplete.data.quest.OnlyNight
 import de.westnordost.streetcomplete.data.quest.OsmQuestKey
 import de.westnordost.streetcomplete.data.quest.QuestTypeRegistry
 import de.westnordost.streetcomplete.ktx.format
@@ -23,7 +18,6 @@ import de.westnordost.streetcomplete.util.contains
 import de.westnordost.streetcomplete.util.enclosingBoundingBox
 import de.westnordost.streetcomplete.util.enlargedBy
 import de.westnordost.streetcomplete.util.measuredLength
-import de.westnordost.streetcomplete.util.isNight
 import kotlinx.coroutines.*
 import java.lang.System.currentTimeMillis
 import java.util.concurrent.CopyOnWriteArrayList
@@ -39,8 +33,7 @@ import javax.inject.Singleton
     private val mapDataSource: MapDataWithEditsSource,
     private val notesSource: NotesWithEditsSource,
     private val questTypeRegistry: QuestTypeRegistry,
-    private val countryBoundariesFuture: FutureTask<CountryBoundaries>,
-    private val prefs: SharedPreferences
+    private val countryBoundariesFuture: FutureTask<CountryBoundaries>
 ): OsmQuestSource {
 
     /* Must be a singleton because there is a listener that should respond to a change in the
@@ -228,18 +221,6 @@ import javax.inject.Singleton
         // do not create quests in countries where the quest is not activated
         val countries = questType.enabledInCountries
         if (!countryBoundariesFuture.get().isInAny(pos, countries))  return false
-
-        // do not create quests outside of hours specified
-        val dayNightCycle = questType.dayNightCycle
-
-        if (!prefs.getBoolean(Prefs.ALWAYS_SHOW_TIME_DEPENDENT, false)) {
-            if (!when (dayNightCycle) {
-                    is DayAndNight -> true
-                    is OnlyDay -> !isNight(pos)
-                    is OnlyNight -> isNight(pos)
-                }
-            ) return false
-        }
 
         // do not create quests that refer to geometry that is too long for a surveyor to be expected to survey
         if (geometry is ElementPolylinesGeometry) {
