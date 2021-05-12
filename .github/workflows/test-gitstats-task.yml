@@ -1,0 +1,18 @@
+name: Testing gitstats task
+
+on: [push, pull_request]
+
+jobs:
+  generate-quest-list:
+    name: Testing gitstats task
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0' # will fetch the entire history
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - run: gradle task updateGitStats
+      - run: ls app/src/main/res/raw/commits_*.yml
+      - run: cat app/src/main/res/raw/commits_*.yml

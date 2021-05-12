@@ -66,3 +66,26 @@ tasks.register("updateStreetCompleteData") {
         "app:generateMetadataByCountry"
         )
 }
+
+tasks.register<GitStatsTask>("gitStatsCode") {
+    group = "streetcomplete"
+    commitFileFilter = Regex(".*\\.(java|kt|kts)$")
+    commitSkipList = arrayOf("ae7a244dd60ccfc91cf2dc01bf9e60c8d6a81616")
+    targetFile = "$projectDir/app/src/main/res/raw/commits_code.yml"
+}
+
+tasks.register<GitStatsTask>("gitStatsPhotos") {
+    group = "streetcomplete"
+    commitFileFilter = Regex(".*\\.(jpe?g|png)$")
+    binaryScore = 1  // This is actually doubled due to the maths
+    commitSkipList = arrayOf("ae7a244dd60ccfc91cf2dc01bf9e60c8d6a81616")
+    targetFile = "$projectDir/app/src/main/res/raw/commits_photos.yml"
+}
+
+tasks.register("updateGitStats") {
+    group = "streetcomplete"
+    dependsOn(
+        "gitStatsCode",
+        "gitStatsPhotos",
+        )
+}
