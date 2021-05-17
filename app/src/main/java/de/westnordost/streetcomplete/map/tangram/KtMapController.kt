@@ -19,6 +19,7 @@ import de.westnordost.streetcomplete.data.osm.mapdata.BoundingBox
 import de.westnordost.streetcomplete.data.osm.mapdata.LatLon
 import de.westnordost.streetcomplete.util.*
 import kotlinx.coroutines.*
+import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.coroutines.Continuation
@@ -37,14 +38,19 @@ import kotlin.math.pow
  *      <li>A simpler interface to touchInput - easy defaulting to default touch gesture behavior</li>
  *      <li>Uses suspend functions instead of callbacks (Kotlin coroutines)</li>
  *      <li>Use LatLon instead of LngLat</li>
+ *      <li>All calls are safe. I.e. if the map view happens to be destroyed already, the calls do
+ *          nothing</li>
  *  </ul>
  *  */
-class KtMapController(private val c: MapController, contentResolver: ContentResolver):
+class KtMapController(ctrl: MapController, contentResolver: ContentResolver):
     LifecycleObserver {
 
-    private val cameraManager = CameraManager(c, contentResolver)
-    private val markerManager = MarkerManager(c)
-    private val gestureManager = TouchGestureManager(c)
+    private val weakCtrl = WeakReference(ctrl)
+    private val c: MapController? get() = weakCtrl.get()
+
+    private val cameraManager = CameraManager(ctrl, contentResolver)
+    private val markerManager = MarkerManager(ctrl)
+    private val gestureManager = TouchGestureManager(ctrl)
 
     private val defaultInterpolator = AccelerateDecelerateInterpolator()
 
@@ -59,7 +65,7 @@ class KtMapController(private val c: MapController, contentResolver: ContentReso
     private val flingAnimator: TimeAnimator = TimeAnimator()
 
     init {
-        c.setSceneLoadListener { sceneId, sceneError ->
+        ctrl.setSceneLoadListener { sceneId, sceneError ->
             val cont = sceneUpdateContinuations.remove(sceneId)
             if (sceneError != null) {
                 cont?.resumeWithException(sceneError.toException())
@@ -69,11 +75,11 @@ class KtMapController(private val c: MapController, contentResolver: ContentReso
             }
         }
 
-        c.setLabelPickListener { labelPickResult: LabelPickResult? ->
+        ctrl.setLabelPickListener { labelPickResult: LabelPickResult? ->
             pickLabelContinuations.poll()?.resume(labelPickResult)
         }
 
-        c.setFeaturePickListener { featurePickResult: FeaturePickResult? ->
+        ctrl.setFeaturePickListener { featurePickResult: FeaturePickResult? ->
             featurePickContinuations.poll()?.resume(featurePickResult)
         }
 
@@ -95,7 +101,7 @@ class KtMapController(private val c: MapController, contentResolver: ContentReso
             }
         }
 
-        c.setMapChangeListener(object : MapChangeListener {
+        ctrl.setMapChangeListener(object : MapChangeListener {
             private var calledOnMapIsChangingOnce = false
 
             override fun onViewComplete() { /* not interested*/ }
@@ -140,22 +146,26 @@ class KtMapController(private val c: MapController, contentResolver: ContentReso
     suspend fun loadSceneFile(
         path: String,
         sceneUpdates: List<SceneUpdate>? = null
-    ): Int = suspendCancellableCoroutine { cont ->
-        markerManager.invalidateMarkers()
-        val sceneId = c.loadSceneFileAsync(path, sceneUpdates)
-        sceneUpdateContinuations[sceneId] = cont
-        cont.invokeOnCancellation { sceneUpdateContinuations.remove(sceneId) }
+    ): Int? = c?.let { c ->
+        suspendCancellableCoroutine { cont ->
+            markerManager.invalidateMarkers()
+            val sceneId = c.loadSceneFileAsync(path, sceneUpdates)
+            sceneUpdateContinuations[sceneId] = cont
+            cont.invokeOnCancellation { sceneUpdateContinuations.remove(sceneId) }
+        }
     }
 
     suspend fun loadSceneYaml(
         yaml: String,
         resourceRoot: String,
         sceneUpdates: List<SceneUpdate>? = null
-    ): Int = suspendCancellableCoroutine { cont ->
-        markerManager.invalidateMarkers()
-        val sceneId = c.loadSceneYamlAsync(yaml, resourceRoot, sceneUpdates)
-        sceneUpdateContinuations[sceneId] = cont
-        cont.invokeOnCancellation { sceneUpdateContinuations.remove(sceneId) }
+    ): Int? = c?.let { c ->
+        suspendCancellableCoroutine { cont ->
+            markerManager.invalidateMarkers()
+            val sceneId = c.loadSceneYamlAsync(yaml, resourceRoot, sceneUpdates)
+            sceneUpdateContinuations[sceneId] = cont
+            cont.invokeOnCancellation { sceneUpdateContinuations.remove(sceneId) }
+        }
     }
 
     /* ----------------------------------------- Camera ----------------------------------------- */
@@ -180,21 +190,21 @@ class KtMapController(private val c: MapController, contentResolver: ContentReso
     }
 
     var cameraType: MapController.CameraType
-        set(value) { c.cameraType = value }
-        get() = c.cameraType
+        set(value) { c?.cameraType = value }
+        get() = c?.cameraType ?: MapController.CameraType.PERSPECTIVE
 
     var minimumZoomLevel: Float
-        set(value) { c.minimumZoomLevel = value }
-        get() = c.minimumZoomLevel
+        set(value) { c?.minimumZoomLevel = value }
+        get() = c?.minimumZoomLevel ?: 0f
 
     var maximumZoomLevel: Float
-        set(value) { c.maximumZoomLevel = value }
-        get() = c.maximumZoomLevel
+        set(value) { c?.maximumZoomLevel = value }
+        get() = c?.maximumZoomLevel ?: 20.5f
 
-    fun screenPositionToLatLon(screenPosition: PointF): LatLon? = c.screenPositionToLngLat(screenPosition)?.toLatLon()
-    fun latLonToScreenPosition(latLon: LatLon): PointF = c.lngLatToScreenPosition(latLon.toLngLat())
+    fun screenPositionToLatLon(screenPosition: PointF): LatLon? = c?.screenPositionToLngLat(screenPosition)?.toLatLon()
+    fun latLonToScreenPosition(latLon: LatLon): PointF? = c?.lngLatToScreenPosition(latLon.toLngLat())
     fun latLonToScreenPosition(latLon: LatLon, screenPositionOut: PointF, clipToViewport: Boolean) =
-        c.lngLatToScreenPosition(latLon.toLngLat(), screenPositionOut, clipToViewport)
+        c?.lngLatToScreenPosition(latLon.toLngLat(), screenPositionOut, clipToViewport)
 
     fun screenCenterToLatLon(padding: RectF): LatLon? {
         val view = glViewHolder?.view ?: return null
@@ -241,6 +251,7 @@ class KtMapController(private val c: MapController, contentResolver: ContentReso
     }
 
     private fun getMaxZoomThatContainsBounds(bounds: BoundingBox, padding: RectF): Float? {
+        val c = c ?: return null
         val screenBounds: BoundingBox
         val currentZoom: Float
         synchronized(c) {
@@ -281,32 +292,37 @@ class KtMapController(private val c: MapController, contentResolver: ContentReso
 
     /* -------------------------------------- Data Layers --------------------------------------- */
 
-    fun addDataLayer(name: String, generateCentroid: Boolean = false): MapData =
-        c.addDataLayer(name, generateCentroid)
+    fun addDataLayer(name: String, generateCentroid: Boolean = false): MapData? =
+        c?.addDataLayer(name, generateCentroid)
 
     /* ---------------------------------------- Markers ----------------------------------------- */
 
-    fun addMarker(): Marker = markerManager.addMarker()
+    fun addMarker(): Marker? = markerManager.addMarker()
     fun removeMarker(marker: Marker): Boolean = removeMarker(marker.markerId)
     fun removeMarker(markerId: Long): Boolean = markerManager.removeMarker(markerId)
     fun removeAllMarkers() = markerManager.removeAllMarkers()
 
     /* ------------------------------------ Map interaction ------------------------------------- */
 
-    fun setPickRadius(radius: Float) = c.setPickRadius(radius)
+    fun setPickRadius(radius: Float) = c?.setPickRadius(radius)
 
-    suspend fun pickLabel(posX: Float, posY: Float): LabelPickResult? = suspendCancellableCoroutine { cont ->
-        pickLabelContinuations.offer(cont)
-        cont.invokeOnCancellation { pickLabelContinuations.remove(cont) }
-        c.pickLabel(posX, posY)
+    suspend fun pickLabel(posX: Float, posY: Float): LabelPickResult? = c?.let { c ->
+        suspendCancellableCoroutine { cont ->
+            pickLabelContinuations.offer(cont)
+            cont.invokeOnCancellation { pickLabelContinuations.remove(cont) }
+            c.pickLabel(posX, posY)
+        }
     }
 
-    suspend fun pickMarker(posX: Float, posY: Float): MarkerPickResult? = markerManager.pickMarker(posX, posY)
+    suspend fun pickMarker(posX: Float, posY: Float): MarkerPickResult? =
+        markerManager.pickMarker(posX, posY)
 
-    suspend fun pickFeature(posX: Float, posY: Float): FeaturePickResult? = suspendCancellableCoroutine { cont ->
-        featurePickContinuations.offer(cont)
-        cont.invokeOnCancellation { featurePickContinuations.remove(cont) }
-        c.pickFeature(posX, posY)
+    suspend fun pickFeature(posX: Float, posY: Float): FeaturePickResult? = c?.let { c ->
+        suspendCancellableCoroutine { cont ->
+            featurePickContinuations.offer(cont)
+            cont.invokeOnCancellation { featurePickContinuations.remove(cont) }
+            c.pickFeature(posX, posY)
+        }
     }
 
     fun setMapChangingListener(listener: MapChangingListener?) { mapChangingListener = listener }
@@ -317,43 +333,43 @@ class KtMapController(private val c: MapController, contentResolver: ContentReso
     fun setScaleResponder(responder: TouchInput.ScaleResponder?) { gestureManager.setScaleResponder(responder) }
     fun setRotateResponder(responder: TouchInput.RotateResponder?) { gestureManager.setRotateResponder(responder) }
     fun setPanResponder(responder: TouchInput.PanResponder?) { gestureManager.setPanResponder(responder) }
-    fun setTapResponder(responder: TouchInput.TapResponder?) { c.touchInput.setTapResponder(responder) }
-    fun setDoubleTapResponder(responder: TouchInput.DoubleTapResponder?) { c.touchInput.setDoubleTapResponder(responder) }
-    fun setLongPressResponder(responder: TouchInput.LongPressResponder?) { c.touchInput.setLongPressResponder(responder) }
+    fun setTapResponder(responder: TouchInput.TapResponder?) { c?.touchInput?.setTapResponder(responder) }
+    fun setDoubleTapResponder(responder: TouchInput.DoubleTapResponder?) { c?.touchInput?.setDoubleTapResponder(responder) }
+    fun setLongPressResponder(responder: TouchInput.LongPressResponder?) { c?.touchInput?.setLongPressResponder(responder) }
 
-    fun isGestureEnabled(g: TouchInput.Gestures): Boolean = c.touchInput.isGestureEnabled(g)
-    fun setGestureEnabled(g: TouchInput.Gestures) { c.touchInput.setGestureEnabled(g) }
-    fun setGestureDisabled(g: TouchInput.Gestures) { c.touchInput.setGestureDisabled(g) }
-    fun setAllGesturesEnabled() { c.touchInput.setAllGesturesEnabled() }
-    fun setAllGesturesDisabled() { c.touchInput.setAllGesturesDisabled() }
+    fun isGestureEnabled(g: TouchInput.Gestures): Boolean = c?.touchInput?.isGestureEnabled(g) == true
+    fun setGestureEnabled(g: TouchInput.Gestures) { c?.touchInput?.setGestureEnabled(g) }
+    fun setGestureDisabled(g: TouchInput.Gestures) { c?.touchInput?.setGestureDisabled(g) }
+    fun setAllGesturesEnabled() { c?.touchInput?.setAllGesturesEnabled() }
+    fun setAllGesturesDisabled() { c?.touchInput?.setAllGesturesDisabled() }
 
     fun setSimultaneousDetectionEnabled(first: TouchInput.Gestures, second: TouchInput.Gestures) {
-        c.touchInput.setSimultaneousDetectionEnabled(first, second)
+        c?.touchInput?.setSimultaneousDetectionEnabled(first, second)
     }
     fun setSimultaneousDetectionDisabled(first: TouchInput.Gestures, second: TouchInput.Gestures) {
-        c.touchInput.setSimultaneousDetectionDisabled(first, second)
+        c?.touchInput?.setSimultaneousDetectionDisabled(first, second)
     }
     fun isSimultaneousDetectionAllowed(first: TouchInput.Gestures, second: TouchInput.Gestures): Boolean =
-        c.touchInput.isSimultaneousDetectionAllowed(first, second)
+        c?.touchInput?.isSimultaneousDetectionAllowed(first, second) == true
 
     /* ------------------------------------------ Misc ------------------------------------------ */
 
     suspend fun captureFrame(waitForCompleteView: Boolean): Bitmap = suspendCancellableCoroutine { cont ->
-        c.captureFrame({ bitmap -> cont.resume(bitmap) }, waitForCompleteView)
+        c?.captureFrame({ bitmap -> cont.resume(bitmap) }, waitForCompleteView)
     }
 
-    fun requestRender() = c.requestRender()
-    fun setRenderMode(renderMode: Int) = c.setRenderMode(renderMode)
+    fun requestRender() = c?.requestRender()
+    fun setRenderMode(renderMode: Int) = c?.setRenderMode(renderMode)
 
-    fun queueEvent(block: () -> Unit) = c.queueEvent(block)
+    fun queueEvent(block: () -> Unit) = c?.queueEvent(block)
 
-    val glViewHolder: GLViewHolder? get() = c.glViewHolder
+    val glViewHolder: GLViewHolder? get() = c?.glViewHolder
 
-    fun setDebugFlag(flag: MapController.DebugFlag, on: Boolean) = c.setDebugFlag(flag, on)
+    fun setDebugFlag(flag: MapController.DebugFlag, on: Boolean) = c?.setDebugFlag(flag, on)
 
-    fun useCachedGlState(use: Boolean) = c.useCachedGlState(use)
+    fun useCachedGlState(use: Boolean) = c?.useCachedGlState(use)
 
-    fun setDefaultBackgroundColor(red: Float, green: Float, blue: Float) = c.setDefaultBackgroundColor(red, green, blue)
+    fun setDefaultBackgroundColor(red: Float, green: Float, blue: Float) = c?.setDefaultBackgroundColor(red, green, blue)
 }
 
 class LoadSceneException(message: String, val sceneUpdate: SceneUpdate) : RuntimeException(message)

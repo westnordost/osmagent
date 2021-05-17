@@ -19,9 +19,9 @@ import kotlin.math.pow
 class CurrentLocationMapComponent(ctx: Context, private val ctrl: KtMapController) {
 
     // markers showing the user's location, direction and accuracy of location
-    private val locationMarker: Marker
-    private val accuracyMarker: Marker
-    private val directionMarker: Marker
+    private val locationMarker: Marker?
+    private val accuracyMarker: Marker?
+    private val directionMarker: Marker?
 
     private val directionMarkerSize: PointF
 
@@ -76,7 +76,7 @@ class CurrentLocationMapComponent(ctx: Context, private val ctrl: KtMapControlle
 
         val accuracyImg = ctx.resources.getBitmapDrawable(R.drawable.accuracy_circle)
 
-        locationMarker = ctrl.addMarker().also {
+        locationMarker = ctrl.addMarker()?.also {
             it.setStylingFromString("""
             {
                 style: 'points',
@@ -91,20 +91,20 @@ class CurrentLocationMapComponent(ctx: Context, private val ctrl: KtMapControlle
             it.setDrawOrder(3)
         }
 
-        directionMarker = ctrl.addMarker().also {
+        directionMarker = ctrl.addMarker()?.also {
             it.setDrawable(directionImg)
             it.setDrawOrder(2)
         }
-        accuracyMarker =  ctrl.addMarker().also {
+        accuracyMarker =  ctrl.addMarker()?.also {
             it.setDrawable(accuracyImg)
             it.setDrawOrder(1)
         }
     }
 
     private fun hide() {
-        locationMarker.isVisible = false
-        accuracyMarker.isVisible = false
-        directionMarker.isVisible = false
+        locationMarker?.isVisible = false
+        accuracyMarker?.isVisible = false
+        directionMarker?.isVisible = false
     }
 
     private fun show() {
@@ -117,12 +117,12 @@ class CurrentLocationMapComponent(ctx: Context, private val ctrl: KtMapControlle
         if (!isVisible) return
         val pos = location?.let { LatLon(it.latitude, it.longitude) } ?: return
 
-        accuracyMarker.isVisible = true
-        accuracyMarker.setPointEased(pos, 1000, MapController.EaseType.CUBIC)
-        locationMarker.isVisible = true
-        locationMarker.setPointEased(pos, 1000, MapController.EaseType.CUBIC)
-        directionMarker.isVisible = rotation != null
-        directionMarker.setPointEased(pos, 1000, MapController.EaseType.CUBIC)
+        accuracyMarker?.isVisible = true
+        accuracyMarker?.setPointEased(pos, 1000, MapController.EaseType.CUBIC)
+        locationMarker?.isVisible = true
+        locationMarker?.setPointEased(pos, 1000, MapController.EaseType.CUBIC)
+        directionMarker?.isVisible = rotation != null
+        directionMarker?.setPointEased(pos, 1000, MapController.EaseType.CUBIC)
 
         updateAccuracy()
     }
@@ -133,7 +133,7 @@ class CurrentLocationMapComponent(ctx: Context, private val ctrl: KtMapControlle
         val location = location ?: return
 
         val size = location.accuracy * pixelsPerMeter(location.latitude, ctrl.cameraPosition.zoom)
-        accuracyMarker.setStylingFromString("""
+        accuracyMarker?.setStylingFromString("""
         {
             style: 'points',
             color: 'white',
@@ -150,8 +150,8 @@ class CurrentLocationMapComponent(ctx: Context, private val ctrl: KtMapControlle
         // no sense to display direction if there is no location yet
         if (rotation == null || location == null) return
 
-        directionMarker.isVisible = true
-        directionMarker.setStylingFromString("""
+        directionMarker?.isVisible = true
+        directionMarker?.setStylingFromString("""
         {
             style: 'points',
             color: '#cc536dfe',

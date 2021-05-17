@@ -2,6 +2,7 @@ package de.westnordost.streetcomplete.map.tangram
 
 import com.mapzen.tangram.MapController
 import com.mapzen.tangram.TouchInput
+import java.lang.ref.WeakReference
 
 /**
  *  Manages touch gesture responders. Use in place of directly setting the responders on the
@@ -15,20 +16,23 @@ import com.mapzen.tangram.TouchInput
 
  *  See https://github.com/tangrams/tangram-es/issues/1960
  *  */
-class TouchGestureManager(private val c: MapController) {
+class TouchGestureManager(ctrl: MapController) {
+
+    private val weakCtrl = WeakReference(c)
+    private val c: MapController? get() = weakCtrl.get()
 
     // the getters actually do not get but _create_ the responders, so we need to keep them as fields
-    private val defaultShoveResponder = c.shoveResponder
-    private val defaultRotateResponse = c.rotateResponder
-    private val defaultPanResponder = c.panResponder
-    private val defaultScaleResponder = c.scaleResponder
+    private val defaultShoveResponder = ctrl.shoveResponder
+    private val defaultRotateResponse = ctrl.rotateResponder
+    private val defaultPanResponder = ctrl.panResponder
+    private val defaultScaleResponder = ctrl.scaleResponder
 
     fun setShoveResponder(responder: TouchInput.ShoveResponder?) {
         if (responder == null) {
-            c.touchInput.setShoveResponder(defaultShoveResponder)
+            c?.touchInput?.setShoveResponder(defaultShoveResponder)
         }
         else {
-            c.touchInput.setShoveResponder(object : TouchInput.ShoveResponder {
+            c?.touchInput?.setShoveResponder(object : TouchInput.ShoveResponder {
                 override fun onShoveBegin(): Boolean {
                     if (responder.onShoveBegin()) return false
                     return defaultShoveResponder.onShoveBegin()
@@ -48,10 +52,10 @@ class TouchGestureManager(private val c: MapController) {
 
     fun setScaleResponder(responder: TouchInput.ScaleResponder?) {
         if (responder == null) {
-            c.touchInput.setScaleResponder(defaultScaleResponder)
+            c?.touchInput?.setScaleResponder(defaultScaleResponder)
         }
         else {
-            c.touchInput.setScaleResponder(object : TouchInput.ScaleResponder {
+            c?.touchInput?.setScaleResponder(object : TouchInput.ScaleResponder {
                 override fun onScaleBegin(): Boolean {
                     if (responder.onScaleBegin()) return false
                     return defaultScaleResponder.onScaleBegin()
@@ -72,10 +76,10 @@ class TouchGestureManager(private val c: MapController) {
 
     fun setRotateResponder(responder: TouchInput.RotateResponder?) {
         if (responder == null) {
-            c.touchInput.setRotateResponder(defaultRotateResponse)
+            c?.touchInput?.setRotateResponder(defaultRotateResponse)
         }
         else {
-            c.touchInput.setRotateResponder(object : TouchInput.RotateResponder {
+            c?.touchInput?.setRotateResponder(object : TouchInput.RotateResponder {
                 override fun onRotateBegin(): Boolean {
                     if (responder.onRotateBegin()) return false
                     return defaultRotateResponse.onRotateBegin()
@@ -96,10 +100,10 @@ class TouchGestureManager(private val c: MapController) {
 
     fun setPanResponder(responder: TouchInput.PanResponder?) {
         if (responder == null) {
-            c.touchInput.setPanResponder(defaultPanResponder)
+            c?.touchInput?.setPanResponder(defaultPanResponder)
         }
         else {
-            c.touchInput.setPanResponder(object : TouchInput.PanResponder {
+            c?.touchInput?.setPanResponder(object : TouchInput.PanResponder {
                 override fun onPanBegin(): Boolean {
                     if (responder.onPanBegin()) return false
                     return defaultPanResponder.onPanBegin()

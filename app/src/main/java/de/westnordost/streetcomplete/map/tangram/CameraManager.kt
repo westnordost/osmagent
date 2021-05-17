@@ -15,6 +15,7 @@ import com.mapzen.tangram.CameraUpdateFactory
 import com.mapzen.tangram.MapController
 import de.westnordost.streetcomplete.data.osm.mapdata.LatLon
 import de.westnordost.streetcomplete.ktx.runImmediate
+import java.lang.ref.WeakReference
 import kotlin.math.PI
 
 /**
@@ -33,7 +34,10 @@ import kotlin.math.PI
  *
  *  See https://github.com/tangrams/tangram-es/issues/1962
  *  */
-class CameraManager(private val c: MapController, private val contentResolver: ContentResolver) {
+class CameraManager(ctrl: MapController, private val contentResolver: ContentResolver) {
+    private val weakC = WeakReference(ctrl)
+    private val c get() = weakC.get()
+
     private val defaultInterpolator = AccelerateDecelerateInterpolator()
     private val doubleTypeEvaluator = DoubleTypeEvaluator()
     private val currentAnimations = mutableMapOf<String, Animator>()
@@ -162,12 +166,12 @@ class CameraManager(private val c: MapController, private val contentResolver: C
     }
 
     private fun pullCameraPositionFromController() {
-        c.getCameraPosition(_tangramCamera)
+        c?.getCameraPosition(_tangramCamera)
     }
 
     private fun pushCameraPositionToController() {
         LatLon.checkValidity(_tangramCamera.latitude, _tangramCamera.longitude)
-        c.updateCameraPosition(CameraUpdateFactory.newCameraPosition(_tangramCamera))
+        c?.updateCameraPosition(CameraUpdateFactory.newCameraPosition(_tangramCamera))
     }
 
     @UiThread private fun animate(animator: ValueAnimator) {

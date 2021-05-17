@@ -88,7 +88,7 @@ class PinsMapComponent(private val ctx: Context, private val ctrl: KtMapControll
     private fun showPinSelectionMarkers(positions: Collection<LatLon>) {
         clearPinSelectionMarkers()
         for (position in positions) {
-            pinSelectionMarkers.add(createPinSelectionMarker(position))
+            createPinSelectionMarker(position)?.let { pinSelectionMarkers.add(it) }
         }
     }
 
@@ -97,8 +97,8 @@ class PinsMapComponent(private val ctx: Context, private val ctrl: KtMapControll
         pinSelectionMarkers.clear()
     }
 
-    private fun createPinSelectionMarker(pos: LatLon): Marker =
-        ctrl.addMarker().also {
+    private fun createPinSelectionMarker(pos: LatLon): Marker? =
+        ctrl.addMarker()?.also {
             it.setStylingFromString("""
             {
                 style: 'pin-selection',

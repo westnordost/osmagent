@@ -12,19 +12,20 @@ class PointMarkersMapComponent(private val ctrl: KtMapController) {
 
     @Synchronized fun put(pos: LatLon, @DrawableRes drawableResId: Int) {
         delete(pos)
-        val marker = ctrl.addMarker()
-        marker.setDrawable(drawableResId)
-        marker.setStylingFromString("""
-        {
-            style: 'points',
-            color: 'white',
-            size: 48px,
-            order: 2000,
-            collide: false
+        ctrl.addMarker()?.also {
+            it.setDrawable(drawableResId)
+            it.setStylingFromString("""
+            {
+                style: 'points',
+                color: 'white',
+                size: 48px,
+                order: 2000,
+                collide: false
+            }
+            """)
+            it.setPoint(pos)
+            markerIds[pos] = it.markerId
         }
-        """.trimIndent())
-        marker.setPoint(pos)
-        markerIds[pos] = marker.markerId
     }
 
     @Synchronized fun delete(pos: LatLon): Boolean {

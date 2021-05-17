@@ -7,6 +7,7 @@ import com.mapzen.tangram.geometry.Polygon
 import com.mapzen.tangram.geometry.Polyline
 import de.westnordost.streetcomplete.data.osm.mapdata.LatLon
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -19,7 +20,9 @@ import kotlin.coroutines.resume
  *
  *  See https://github.com/tangrams/tangram-es/issues/1756
  *  */
-class MarkerManager(private val c: MapController) {
+class MarkerManager(ctrl: MapController) {
+    private val weakC = WeakReference(ctrl)
+    private val c get() = weakC.get()
 
     private var markerIdCounter = 0L
     private val markers = mutableMapOf<Long, Marker>()
@@ -27,7 +30,7 @@ class MarkerManager(private val c: MapController) {
     private val markerPickContinuations = ConcurrentLinkedQueue<Continuation<MarkerPickResult?>>()
 
     init {
-        c.setMarkerPickListener { tangramMarkerPickResult: com.mapzen.tangram.MarkerPickResult? ->
+        ctrl.setMarkerPickListener { tangramMarkerPickResult: com.mapzen.tangram.MarkerPickResult? ->
             val tangramMarkerId = tangramMarkerPickResult?.marker?.markerId
             var markerPickResult: MarkerPickResult? = null
             if (tangramMarkerId != null) {
@@ -43,11 +46,13 @@ class MarkerManager(private val c: MapController) {
     suspend fun pickMarker(posX: Float, posY: Float): MarkerPickResult? = suspendCancellableCoroutine { cont ->
         markerPickContinuations.offer(cont)
         cont.invokeOnCancellation { markerPickContinuations.remove(cont) }
-        c.pickMarker(posX, posY)
+        c?.pickMarker(posX, posY)
     }
 
-    fun addMarker(): Marker {
-        val marker = Marker(markerIdCounter++, c.addMarker())
+    fun addMarker(): Marker? {
+        val m = c?.addMarker() ?: return null
+
+        val marker = Marker(markerIdCounter++, m)
         markers[marker.markerId] = marker
         return marker
     }
@@ -56,18 +61,19 @@ class MarkerManager(private val c: MapController) {
         val marker = markers.remove(markerId) ?: return false
         val tangramMarkerId = marker.tangramMarker?.markerId
         if (tangramMarkerId != null) {
-            c.removeMarker(tangramMarkerId)
+            c?.removeMarker(tangramMarkerId)
         }
         return true
     }
+
     fun removeAllMarkers() {
         markers.clear()
-        c.removeAllMarkers()
+        c?.removeAllMarkers()
     }
 
     fun recreateMarkers() {
         for (marker in markers.values) {
-            marker.tangramMarker = c.addMarker()
+            c?.addMarker()?.let { marker.tangramMarker = it }
         }
     }
 
