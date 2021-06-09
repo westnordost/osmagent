@@ -102,6 +102,7 @@ class AddLanesForm : AbstractQuestFormAnswerFragment<LanesAnswer>() {
                 val backwardLanes = if (isLeftHandTraffic) rightSide else leftSide
                 applyAnswer(MarkedLanesSides(forwardLanes, backwardLanes, hasCenterLeftTurnLane))
             }
+            UNMARKED_KNOWN_LANE_COUNT -> applyAnswer(UnmarkedLanesKnowLaneCount(totalLanes))
         }
     }
 
@@ -123,21 +124,28 @@ class AddLanesForm : AbstractQuestFormAnswerFragment<LanesAnswer>() {
         val unmarkedLanesButton = view.unmarkedLanesButton
 
         unmarkedLanesButton.isSelected = selectedLanesType == UNMARKED
-
         unmarkedLanesButton.setOnClickListener {
             val wasSelected = unmarkedLanesButton.isSelected
             unmarkedLanesButton.isSelected = !wasSelected
             selectedLanesType = if (wasSelected) null else UNMARKED
             checkIsFormComplete()
         }
+
         view.markedLanesButton.setOnClickListener {
             selectedLanesType = MARKED
             unmarkedLanesButton.isSelected = false
             checkIsFormComplete()
             askLanesAndSwitchToStreetSideLayout()
         }
-        view.markedLanesOddButton.isGone = isOneway
 
+        view.unmarkedLanesKnownLaneCountButton.setOnClickListener {
+            selectedLanesType = UNMARKED_KNOWN_LANE_COUNT
+            unmarkedLanesButton.isSelected = false
+            checkIsFormComplete()
+            askLanesAndSwitchToStreetSideLayout()
+        }
+
+        view.markedLanesOddButton.isGone = isOneway
         view.markedLanesOddButton.setOnClickListener {
             selectedLanesType = MARKED_SIDES
             unmarkedLanesButton.isSelected = false
@@ -169,7 +177,7 @@ class AddLanesForm : AbstractQuestFormAnswerFragment<LanesAnswer>() {
         lifecycle.addObserver(view.puzzleView)
 
         when(selectedLanesType) {
-            MARKED -> {
+            MARKED, UNMARKED_KNOWN_LANE_COUNT -> {
                 view.puzzleView.onClickListener = this::selectTotalNumberOfLanes
                 view.puzzleView.onClickSideListener = null
             }
@@ -234,7 +242,7 @@ class AddLanesForm : AbstractQuestFormAnswerFragment<LanesAnswer>() {
 
     private suspend fun askForTotalNumberOfLanes(): Int {
         val currentLaneCount = rightSide + leftSide
-        return if (selectedLanesType == MARKED) {
+        return if (selectedLanesType == MARKED || selectedLanesType == UNMARKED_KNOWN_LANE_COUNT) {
             if (isOneway) {
                 showSelectMarkedLanesDialogForOneSide(currentLaneCount.takeIf { it > 0 })
             } else {
@@ -285,5 +293,5 @@ class AddLanesForm : AbstractQuestFormAnswerFragment<LanesAnswer>() {
 }
 
 private enum class LanesType {
-    MARKED, MARKED_SIDES, UNMARKED
+    MARKED, MARKED_SIDES, UNMARKED, UNMARKED_KNOWN_LANE_COUNT
 }

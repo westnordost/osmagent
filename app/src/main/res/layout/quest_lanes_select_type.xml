@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:weightSum="1"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    >
 
     <TextView
         android:id="@+id/selectHintLabel"
@@ -16,8 +17,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         <LinearLayout
             android:id="@+id/markedLanesButton"
             android:layout_width="0dp"
@@ -73,6 +77,38 @@
                 android:text="@string/quest_lanes_answer_noLanes"/>
 
         </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/unmarkedLanesKnownLaneCountButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@drawable/image_select_cell_rounded">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_lanes_unmarked"
+                android:adjustViewBounds="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ImageSelectLabelBelow"
+                android:text="@string/quest_lanes_answer_noLanes_known_count"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/markedLanesOddButton"
@@ -100,6 +136,7 @@
                 style="@style/ImageSelectLabelBelow"
                 android:text="@string/quest_lanes_answer_lanes_odd2"/>
 
+        </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
