@@ -5,6 +5,7 @@ import de.westnordost.streetcomplete.data.osm.osmquests.OsmQuest
 import de.westnordost.streetcomplete.data.osm.osmquests.OsmQuestSource
 import de.westnordost.streetcomplete.data.osmnotes.notequests.OsmNoteQuest
 import de.westnordost.streetcomplete.data.osmnotes.notequests.OsmNoteQuestSource
+import de.westnordost.streetcomplete.data.visiblequests.DayNightQuestFilter
 import de.westnordost.streetcomplete.data.visiblequests.TeamModeQuestFilter
 import de.westnordost.streetcomplete.data.visiblequests.VisibleQuestTypeSource
 import java.util.concurrent.CopyOnWriteArrayList
@@ -17,7 +18,8 @@ import javax.inject.Singleton
     private val osmQuestSource: OsmQuestSource,
     private val osmNoteQuestSource: OsmNoteQuestSource,
     private val visibleQuestTypeSource: VisibleQuestTypeSource,
-    private val teamModeQuestFilter: TeamModeQuestFilter
+    private val teamModeQuestFilter: TeamModeQuestFilter,
+    private val dayNightQuestFilter: DayNightQuestFilter,
 ) {
     interface Listener {
         /** Called when given quests in the given group have been added/removed */
@@ -82,7 +84,7 @@ import javax.inject.Singleton
     }
 
     private fun isVisible(quest: Quest): Boolean =
-        visibleQuestTypeSource.isVisible(quest.type) && teamModeQuestFilter.isVisible(quest)
+        visibleQuestTypeSource.isVisible(quest.type) && teamModeQuestFilter.isVisible(quest) && dayNightQuestFilter.isVisible(quest)
 
     fun addListener(listener: Listener) {
         listeners.add(listener)

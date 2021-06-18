@@ -4,6 +4,7 @@ import de.westnordost.streetcomplete.R
 import de.westnordost.streetcomplete.data.meta.updateWithCheckDate
 import de.westnordost.streetcomplete.data.osm.edits.update_tags.StringMapChangesBuilder
 import de.westnordost.streetcomplete.data.osm.osmquests.OsmFilterQuestType
+import de.westnordost.streetcomplete.data.quest.DayNightCycle.ONLY_NIGHT
 import de.westnordost.streetcomplete.ktx.arrayOfNotNull
 import de.westnordost.streetcomplete.ktx.containsAnyKey
 import de.westnordost.streetcomplete.ktx.toYesNo
@@ -29,6 +30,7 @@ class AddBusStopLit : OsmFilterQuestType<Boolean>() {
     override val commitMessage = "Add whether a bus stop is lit"
     override val wikiLink = "Key:lit"
     override val icon = R.drawable.ic_quest_bus_stop_lit
+    override val dayNightCycle = ONLY_NIGHT
 
     override fun getTitle(tags: Map<String, String>): Int {
         val hasName = tags.containsAnyKey("name", "ref")

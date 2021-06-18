@@ -3,8 +3,9 @@ package de.westnordost.streetcomplete.quests.way_lit
 import de.westnordost.streetcomplete.R
 import de.westnordost.streetcomplete.data.meta.MAXSPEED_TYPE_KEYS
 import de.westnordost.streetcomplete.data.meta.updateWithCheckDate
-import de.westnordost.streetcomplete.data.osm.osmquests.OsmFilterQuestType
 import de.westnordost.streetcomplete.data.osm.edits.update_tags.StringMapChangesBuilder
+import de.westnordost.streetcomplete.data.osm.osmquests.OsmFilterQuestType
+import de.westnordost.streetcomplete.data.quest.DayNightCycle.ONLY_NIGHT
 
 class AddWayLit : OsmFilterQuestType<WayLit>() {
 
@@ -44,6 +45,7 @@ class AddWayLit : OsmFilterQuestType<WayLit>() {
     override val wikiLink = "Key:lit"
     override val icon = R.drawable.ic_quest_lantern
     override val isSplitWayEnabled = true
+    override val dayNightCycle = ONLY_NIGHT
 
     override fun getTitle(tags: Map<String, String>): Int {
         val type = tags["highway"]
