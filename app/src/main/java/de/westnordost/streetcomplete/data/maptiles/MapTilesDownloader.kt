@@ -8,12 +8,13 @@ import de.westnordost.streetcomplete.map.TileSource
 import de.westnordost.streetcomplete.map.VectorTileProvider
 import de.westnordost.streetcomplete.util.enclosingTilesRect
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import okhttp3.*
 import okhttp3.internal.Version
 import java.io.IOException
-import java.lang.System.currentTimeMillis
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.system.measureTimeMillis
 
 class MapTilesDownloader @Inject constructor(
     private val vectorTileProvider: VectorTileProvider,
@@ -21,46 +22,47 @@ class MapTilesDownloader @Inject constructor(
 ) {
     private val okHttpClient = OkHttpClient.Builder().cache(cacheConfig.cache).build()
 
-    data class Tile(val zoom: Int, val x: Int, val y: Int)
-
-    suspend fun download(bbox: BoundingBox) = withContext(Dispatchers.IO) {
-        var tileCount = 0
-        var failureCount = 0
-        var downloadedSize = 0
-        var cachedSize = 0
-        val time = currentTimeMillis()
-
-        coroutineScope {
-            listOf(
-                vectorTileProvider.baseTileSource,
-                vectorTileProvider.aerialLayerSource
-            ).forEach { source ->
-                for (tile in getDownloadTileSequence(source, bbox)) {
-                    launch {
-                        val result = downloadTile(source, tile.zoom, tile.x, tile.y)
-                        ++tileCount
-                        when (result) {
-                            is DownloadFailure -> ++failureCount
-                            is DownloadSuccess -> {
-                                if (result.alreadyCached) cachedSize += result.size
-                                else downloadedSize += result.size
-                            }
-                        }
-                    }
+    private data class DownloadStats(
+        var tileCount: Int = 0,
+        var failureCount: Int = 0,
+        var downloadedSize: Int = 0,
+        var cachedSize: Int = 0,
+    ) {
+        fun add(result: DownloadResult) {
+            ++tileCount
+            when (result) {
+                is DownloadFailure -> ++failureCount
+                is DownloadSuccess -> {
+                    if (result.alreadyCached) cachedSize += result.size
+                    else downloadedSize += result.size
                 }
             }
         }
-        val seconds = (currentTimeMillis() - time) / 1000.0
-        val failureText = if (failureCount > 0) ". $failureCount tiles failed to download" else ""
-        Log.i(TAG, "Downloaded $tileCount tiles (${downloadedSize / 1000}kB downloaded, ${cachedSize / 1000}kB already cached) in ${seconds.format(1)}s$failureText")
     }
 
-    private fun getDownloadTileSequence(source: TileSource, bbox: BoundingBox): Sequence<Tile> =
+    suspend fun download(bbox: BoundingBox) = withContext(Dispatchers.IO) {
+        val stats = DownloadStats()
+
+        val seconds = measureTimeMillis {
+            downloadTilesFlow(vectorTileProvider.baseTileSource, bbox).collect(stats::add)
+            downloadTilesFlow(vectorTileProvider.aerialLayerSource, bbox).collect(stats::add)
+        } / 1000.0
+
+        stats.run {
+            val failureText = if (failureCount > 0) ". $failureCount tiles failed to download" else ""
+            Log.i(TAG, "Downloaded $tileCount tiles (${downloadedSize / 1000}kB downloaded, ${cachedSize / 1000}kB already cached) in ${seconds.format(1)}s$failureText")
+        }
+    }
+
+    private fun downloadTilesFlow(source: TileSource, bbox: BoundingBox): Flow<DownloadResult> = flow {
         /* tiles for the highest zoom (=likely current or near current zoom) first,
            because those are the tiles that are likely to be useful first */
-        (source.maxZoom downTo 0).asSequence().flatMap { zoom ->
-            bbox.enclosingTilesRect(zoom).asTilePosSequence().map { Tile(zoom, it.x, it.y) }
+        (source.maxZoom downTo 0).forEach { zoom ->
+            bbox.enclosingTilesRect(zoom).asTilePosSequence().forEach { pos ->
+                emit(downloadTile(source, zoom, pos.x, pos.y))
+            }
         }
+    }
 
     private suspend fun downloadTile(
         source: TileSource,
