@@ -32,7 +32,7 @@ data class TimeRange(val start: Int, val end: Int, val isOpenEnded: Boolean = fa
     fun toStringUsing(locale: Locale, range: String): String {
         val sb = StringBuilder()
         sb.append(timeOfDayToString(locale, start))
-        if (start != end || !isOpenEnded) {
+        if (start != end) {
             sb.append(range)
             var displayEnd = timeOfDayToString(locale, end)
             if (displayEnd == "00:00") displayEnd = "24:00"
