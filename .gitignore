@@ -8,6 +8,7 @@
 *.ignore
 projectFilesBackup/.idea/workspace.xml
 quest-list.csv
+taginfo.json
 /keystore.properties
 /buildSrc/build/
 /buildSrc/.gradle
