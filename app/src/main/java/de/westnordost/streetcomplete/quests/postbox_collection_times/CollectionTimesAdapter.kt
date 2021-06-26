@@ -83,7 +83,7 @@ class CollectionTimesAdapter(
 
     private fun add(weekdays: Weekdays, minutes: Int) {
         val insertIndex = itemCount
-        val timeRange = TimeRange(minutes, minutes)
+        val timeRange = TimeRange(minutes)
         collectionTimesRows.add(OpeningWeekdaysRow(weekdays, timeRange))
         notifyItemInserted(insertIndex)
     }
@@ -119,7 +119,7 @@ class CollectionTimesAdapter(
             hoursLabel.text = times.timeRange.toStringUsing(Locale.getDefault(), "–")
             hoursLabel.setOnClickListener {
                 openSetTimeDialog(times.timeRange.start) { minutes ->
-                    times.timeRange = TimeRange(minutes, minutes)
+                    times.timeRange = TimeRange(minutes)
                     notifyItemChanged(adapterPosition)
                 }
             }
