@@ -13,6 +13,7 @@ sources:
     raster:
         type: Raster
         url: https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}
+        max_zoom: 17
 layers:
     raster:
         data: { source: raster }

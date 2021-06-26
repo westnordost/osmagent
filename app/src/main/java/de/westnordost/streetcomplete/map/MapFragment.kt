@@ -113,9 +113,7 @@ open class MapFragment : Fragment(),
         mapView.onCreate(savedInstanceState)
 
         openstreetmapLink.setOnClickListener { showOpenUrlDialog("https://www.openstreetmap.org/copyright") }
-        mapTileProviderLink.text = vectorTileProvider.copyrightText
-        mapTileProviderLink.setOnClickListener { showOpenUrlDialog(vectorTileProvider.copyrightLink) }
-
+        updateAttribution()
         attributionContainer.respectSystemInsets(View::setMargins)
 
         lifecycleScope.launch { initMap() }
@@ -140,6 +138,7 @@ open class MapFragment : Fragment(),
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == Prefs.THEME_BACKGROUND) {
             sceneMapComponent?.isAerialView = sharedPrefs.getString(Prefs.THEME_BACKGROUND, "MAP") == "AERIAL"
+            updateAttribution()
         }
     }
 
@@ -182,6 +181,7 @@ open class MapFragment : Fragment(),
 
         sceneMapComponent = SceneMapComponent(resources, ctrl, vectorTileProvider)
         sceneMapComponent?.isAerialView = sharedPrefs.getString(Prefs.THEME_BACKGROUND, "MAP") == "AERIAL"
+        updateAttribution()
 
         onBeforeLoadScene()
 
@@ -192,6 +192,14 @@ open class MapFragment : Fragment(),
         onMapReady()
 
         listener?.onMapInitialized()
+    }
+
+    private fun updateAttribution() {
+        val activeTileSource = vectorTileProvider.let {
+            if (sceneMapComponent?.isAerialView == true) it.aerialLayerSource else it.baseTileSource
+        }
+        mapTileProviderLink.text = activeTileSource.copyrightText
+        mapTileProviderLink.setOnClickListener { showOpenUrlDialog(activeTileSource.copyrightLink) }
     }
 
     private fun registerResponders(ctrl: KtMapController) {

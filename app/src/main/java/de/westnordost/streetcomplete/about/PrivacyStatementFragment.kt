@@ -22,7 +22,9 @@ class PrivacyStatementFragment : Fragment(R.layout.fragment_show_html) {
         val textView = view.findViewById<HtmlTextView>(R.id.text)
         textView.setHtml(
             getString(R.string.privacy_html) +
-            getString(R.string.privacy_html_tileserver2, vectorTileProvider.title, vectorTileProvider.privacyStatementLink) +
+            vectorTileProvider.baseTileSource.let {
+                getString(R.string.privacy_html_tileserver2, it.title, it.privacyStatementLink)
+            } +
             getString(R.string.privacy_html_statistics) +
             getString(R.string.privacy_html_third_party_quest_sources) +
             getString(R.string.privacy_html_image_upload2)

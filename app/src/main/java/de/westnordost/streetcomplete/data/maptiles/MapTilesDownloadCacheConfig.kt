@@ -19,24 +19,14 @@ import javax.inject.Singleton
         .maxStale(DELETE_OLD_DATA_AFTER.toInt(), TimeUnit.MILLISECONDS)
         .build()
 
-    val cache: Cache?
-
-    init {
-        val cacheDir = context.externalCacheDir
-        val tileCacheDir: File?
-        if (cacheDir != null) {
-            tileCacheDir = File(cacheDir, TILE_CACHE_DIR)
-            if (!tileCacheDir.exists()) tileCacheDir.mkdir()
-        } else {
-            tileCacheDir = null
-        }
-
-        cache = if (tileCacheDir?.exists() == true) {
-            val mbs = PreferenceManager.getDefaultSharedPreferences(context).getInt(Prefs.MAP_TILECACHE_IN_MB, 50)
-            Cache(tileCacheDir, mbs * 1000L * 1000L)
-        } else {
-            null
-        }
+    val cache: Cache? = context.externalCacheDir?.let { cacheDir ->
+        File(cacheDir, TILE_CACHE_DIR)
+            .also { if (!it.exists()) it.mkdir() }
+            .takeIf { it.exists() }
+            ?.let {
+                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                Cache(it, prefs.getInt(Prefs.MAP_TILECACHE_IN_MB, 50) * 1000L * 1000L)
+            }
     }
 
     companion object {

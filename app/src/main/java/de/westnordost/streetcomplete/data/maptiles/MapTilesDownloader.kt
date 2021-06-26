@@ -4,15 +4,17 @@ import android.util.Log
 import de.westnordost.streetcomplete.ApplicationConstants
 import de.westnordost.streetcomplete.data.osm.mapdata.BoundingBox
 import de.westnordost.streetcomplete.ktx.format
+import de.westnordost.streetcomplete.map.TileSource
 import de.westnordost.streetcomplete.map.VectorTileProvider
 import de.westnordost.streetcomplete.util.enclosingTilesRect
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import okhttp3.*
 import okhttp3.internal.Version
 import java.io.IOException
-import java.lang.System.currentTimeMillis
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.system.measureTimeMillis
 
 class MapTilesDownloader @Inject constructor(
     private val vectorTileProvider: VectorTileProvider,
@@ -20,50 +22,57 @@ class MapTilesDownloader @Inject constructor(
 ) {
     private val okHttpClient = OkHttpClient.Builder().cache(cacheConfig.cache).build()
 
-    data class Tile(val zoom: Int, val x: Int, val y: Int)
-
-    suspend fun download(bbox: BoundingBox) = withContext(Dispatchers.IO) {
-        var tileCount = 0
-        var failureCount = 0
-        var downloadedSize = 0
-        var cachedSize = 0
-        val time = currentTimeMillis()
-
-        coroutineScope {
-            for (tile in getDownloadTileSequence(bbox)) {
-                launch {
-                    val result = try {
-                        downloadTile(tile.zoom, tile.x, tile.y)
-                    } catch (e: Exception) {
-                        DownloadFailure
-                    }
-                    ++tileCount
-                    when (result) {
-                        is DownloadFailure -> ++failureCount
-                        is DownloadSuccess -> {
-                            if (result.alreadyCached) cachedSize += result.size
-                            else downloadedSize += result.size
-                        }
-                    }
+    private data class DownloadStats(
+        var tileCount: Int = 0,
+        var failureCount: Int = 0,
+        var downloadedSize: Int = 0,
+        var cachedSize: Int = 0,
+    ) {
+        fun add(result: DownloadResult) {
+            ++tileCount
+            when (result) {
+                is DownloadFailure -> ++failureCount
+                is DownloadSuccess -> {
+                    if (result.alreadyCached) cachedSize += result.size
+                    else downloadedSize += result.size
                 }
             }
         }
-        val seconds = (currentTimeMillis() - time) / 1000.0
-        val failureText = if (failureCount > 0) ". $failureCount tiles failed to download" else ""
-        Log.i(TAG, "Downloaded $tileCount tiles (${downloadedSize / 1000}kB downloaded, ${cachedSize / 1000}kB already cached) in ${seconds.format(1)}s$failureText")
     }
 
-    private fun getDownloadTileSequence(bbox: BoundingBox): Sequence<Tile> =
+    suspend fun download(bbox: BoundingBox) = withContext(Dispatchers.IO) {
+        val stats = DownloadStats()
+
+        val seconds = measureTimeMillis {
+            downloadTilesFlow(vectorTileProvider.baseTileSource, bbox).collect(stats::add)
+            downloadTilesFlow(vectorTileProvider.aerialLayerSource, bbox).collect(stats::add)
+        } / 1000.0
+
+        stats.run {
+            val failureText = if (failureCount > 0) ". $failureCount tiles failed to download" else ""
+            Log.i(TAG, "Downloaded $tileCount tiles (${downloadedSize / 1000}kB downloaded, ${cachedSize / 1000}kB already cached) in ${seconds.format(1)}s$failureText")
+        }
+    }
+
+    private fun downloadTilesFlow(source: TileSource, bbox: BoundingBox): Flow<DownloadResult> = flow {
         /* tiles for the highest zoom (=likely current or near current zoom) first,
            because those are the tiles that are likely to be useful first */
-        (vectorTileProvider.maxZoom downTo 0).asSequence().flatMap { zoom ->
-            bbox.enclosingTilesRect(zoom).asTilePosSequence().map { Tile(zoom, it.x, it.y) }
+        (source.maxZoom downTo 0).forEach { zoom ->
+            bbox.enclosingTilesRect(zoom).asTilePosSequence().forEach { pos ->
+                emit(downloadTile(source, zoom, pos.x, pos.y))
+            }
         }
+    }
 
-    private suspend fun downloadTile(zoom: Int, x: Int, y: Int): DownloadResult = suspendCancellableCoroutine { cont ->
+    private suspend fun downloadTile(
+        source: TileSource,
+        zoom: Int,
+        x: Int,
+        y: Int
+    ): DownloadResult = suspendCancellableCoroutine { cont ->
         /* adding trailing "&" because Tangram-ES also puts this at the end and the URL needs to be
            identical in order for the cache to work */
-        val url = vectorTileProvider.getTileUrl(zoom, x, y) + "&"
+        val url = source.getTileUrl(zoom, x, y) + if (source.title == "JawgMaps") "&" else ""
         val httpUrl = HttpUrl.parse(url)
         require(httpUrl != null) { "Invalid URL: $url" }
 
@@ -78,7 +87,7 @@ class MapTilesDownloader @Inject constructor(
         *  parallel */
         val callback = object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.w(TAG, "Error retrieving tile $zoom/$x/$y: ${e.message}")
+                Log.w(TAG, "Error retrieving ${source.title} tile $zoom/$x/$y: ${e.message}")
                 cont.resume(DownloadFailure)
             }
 
@@ -90,7 +99,7 @@ class MapTilesDownloader @Inject constructor(
                 }
                 val alreadyCached = response.cacheResponse() != null
                 val logText = if (alreadyCached) "in cache" else "downloaded"
-                Log.v(TAG, "Tile $zoom/$x/$y $logText")
+                Log.v(TAG, "${source.title} tile $zoom/$x/$y $logText")
                 cont.resume(DownloadSuccess(alreadyCached, size))
             }
         }

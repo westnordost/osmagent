@@ -65,7 +65,7 @@ class SceneMapComponent (
         val updates = mutableListOf(
             SceneUpdate("global.language", Locale.getDefault().language),
             SceneUpdate("global.text_size_scaling", "${resources.configuration.fontScale}"),
-            SceneUpdate("global.api_key", vectorTileProvider.apiKey),
+            SceneUpdate("global.api_key", vectorTileProvider.baseTileSource.apiKey),
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             updates.add(SceneUpdate("global.language_script", Locale.getDefault().script))
