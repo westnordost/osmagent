@@ -56,7 +56,9 @@ class AddPostboxCollectionTimes : OsmElementQuestType<CollectionTimesAnswer> {
 
     override fun getTitle(tags: Map<String, String>): Int {
         val hasName = tags.containsAnyKey("name", "brand", "operator", "ref")
-        // treat invalid collection times like it is not set at all
+        /* treat invalid collection times like it is not set at all. Any opening hours are
+           legal tagging for collection times, even though they are not supported in
+           this app, i.e. are never asked again */
         val hasValidCollectionTimes = tags["collection_times"]?.toOpeningHoursRules() != null
         return if (hasValidCollectionTimes) {
             when {
