@@ -75,5 +75,12 @@
         tools:listitem="@layout/cell_team_mode_color_circle_select"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/introTextAdditionalTutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/team_mode_description_additional_tutorial"
+        android:textAppearance="@android:style/TextAppearance.Theme.Dialog"/>
+
 </LinearLayout>
 

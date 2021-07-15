@@ -863,6 +863,7 @@ Otherwise, you can download another keyboard in the app store. Popular keyboards
     <string name="team_mode">Team Mode</string>
     <string name="team_mode_exit">Exit Team Mode</string>
     <string name="team_mode_description">When mapping the same area together in a group, you can enter team mode to split up quests between all team members.</string>
+    <string name="team_mode_description_additional_tutorial">Every team member needs to enable team mode on their device. Remember to disable it after mapping together!</string>
     <string name="team_mode_team_size_label">How many people are there?</string>
     <string name="team_mode_team_size_hint">Team mode works for groups of 2 to 12 people.</string>
     <string name="team_mode_choose_color">Now everybody in your group chooses a unique color:</string>
