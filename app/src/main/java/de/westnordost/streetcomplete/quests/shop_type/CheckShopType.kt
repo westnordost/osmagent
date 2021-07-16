@@ -41,10 +41,44 @@ class CheckShopType : OsmFilterQuestType<ShopTypeAnswer>() {
                 if (!answer.tags.containsKey("shop")) {
                     changes.deleteIfExists("shop")
                 }
+
                 changes.deleteIfExists(SURVEY_MARK_KEY)
                 for ((key, value) in answer.tags) {
                     changes.addOrModify(key, value)
                 }
+
+                // Remove any tags which need resetting or resurveying now
+                changes.deleteIfExists("name")
+                changes.deleteIfExists("ref")
+                changes.deleteIfExists("loc_ref")
+                changes.deleteIfExists("opening_hours")
+                changes.deleteIfExists("operator")
+                changes.deleteIfExists("brand")
+                changes.deleteIfExists("brand:wikidata")
+                // contact keys
+                changes.deleteIfExists("phone")
+                changes.deleteIfExists("fax")
+                changes.deleteIfExists("website")
+                changes.deleteIfExists("email")
+                changes.deleteIfExists("contact:phone")
+                changes.deleteIfExists("contact:mobile")
+                changes.deleteIfExists("contact:fax")
+                changes.deleteIfExists("contact:website")
+                changes.deleteIfExists("contact:email")
+                changes.deleteIfExists("contact:facebook")
+                changes.deleteIfExists("contact:twitter")
+                changes.deleteIfExists("contact:instagram")
+                // payment keys
+                changes.deleteIfExists("payment:cash")
+                changes.deleteIfExists("payment:coins")
+                changes.deleteIfExists("payment:notes")
+                changes.deleteIfExists("payment:cheque")
+                changes.deleteIfExists("payment:electronic_purses")
+                changes.deleteIfExists("payment:cards")
+                changes.deleteIfExists("payment:debit_cards")
+                changes.deleteIfExists("payment:credit_cards")
+                changes.deleteIfExists("payment:contactless")
+
 
             }
         }
