@@ -129,6 +129,7 @@
     <string name="quest_openingHours_comment_description">"Be concise, ideally use the wording from the sign, e.g. “by appointment”. The absence of a sign does not necessarily mean that there are no regular opening hours."</string>
     <string name="quest_buildingLevels_title">"How many levels does this building have?"</string>
     <string name="quest_buildingLevels_title_buildingPart">"How many levels does this building part have?"</string>
+    <string name="quest_buildingFlatCount_title">"How many units does this building have?"</string>
     <string name="quest_roofShape_title">"What basic shape does this building’s roof have?"</string>
     <string name="quest_roofShape_select_one">"Select one:"</string>
     <string name="quest_roofShape_show_more">"Show more…"</string><!--it is used in generic list, not only for roof shape but rename would break translations-->
